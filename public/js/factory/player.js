@@ -1,5 +1,5 @@
 
-app.factory('Player', function (Card) {
+app.factory('Player', function (Card, $timeout) {
     function Player(game, data) {
         this.game = game;
         this.id = data.id;
@@ -27,21 +27,22 @@ app.factory('Player', function (Card) {
                 self = this;
 
             for(var i in card.resourcesNeeded){
-                if(this[i] >= card.resourcesNeeded[i]){
-                    this[i] -= card.resourcesNeeded[i];
-                }else{
+                if(this[i] < card.resourcesNeeded[i]){
                     cardCanBePlayed = false;
                 }
             }
 
             if(cardCanBePlayed){
+                for(var i in card.resourcesNeeded)
+                    this[i] -= card.resourcesNeeded[i];
+
                 this.playedCard = card;
                 for(var i = 0; i < this.drawnCards.length; i++)
                     if(this.drawnCards[i] === card)this.drawnCards.splice(i, 1);
                 return true;
             }else{
                 this.cantPlayCard = true;
-                setTimeout(function(){
+                $timeout(function(){
                     self.cantPlayCard = false;
                 }, 2000);
             }
@@ -55,11 +56,18 @@ app.factory('Player', function (Card) {
         },
         drawCard: function () {
             var index = Math.floor(Math.random() * this.cards.length),
-                card = this.cards[index];
+                card = this.cards[index]
+                self = this;
 
             if(card){
                 if(card.type === 'resource'){
                     this[card.name]++;
+                    this['new' + card.name] = true;
+                    console.log(this);
+
+                    $timeout(function () {
+                        self['new' + card.name] = false;
+                    }, 2000);
                 }else{
                     this.drawnCards.push(card);
                 }

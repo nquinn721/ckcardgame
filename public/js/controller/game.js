@@ -1,4 +1,4 @@
-app.controller('game', function (socket, game, $routeParams) {
+app.controller('game', function (socket, game, $routeParams, $location) {
     var self = this;
 
     this.game = new game($routeParams.user);
@@ -33,9 +33,9 @@ app.controller('game', function (socket, game, $routeParams) {
         self.game.opponent.showCard(card);
     });
 
-    socket.on('endRound', function (points, opponentPoints) {
-        self.game.player.hp -= points;
-        self.game.opponent.hp -= opponentPoints
+    socket.on('endRound', function (userhp, opponenthp) {
+        self.game.player.hp = userhp;
+        self.game.opponent.hp = opponenthp;
         self.game.player.playedCard = null;
         self.game.opponent.playedCard = null;
 
@@ -47,5 +47,10 @@ app.controller('game', function (socket, game, $routeParams) {
 
     socket.on('endGame', function () {
         self.game.end();
+    });
+
+    socket.on('redirect', function () {
+        console.log('redirect');
+        $location.path('/');
     });
 });

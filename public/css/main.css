@@ -21,6 +21,7 @@
 .player .cards {
     width: 15%;
     background: #222;
+    cursor: pointer;
 }
 
 .player .cards:after {
@@ -69,6 +70,7 @@
 .cards-played {
     height: 500px;
     background: #ccc;
+    width: 100%;
 }
 
 .name{
@@ -76,4 +78,36 @@
 }
 .attrs {
     font-size: 12px;
+}
+.cards-played > div {
+    box-sizing: border-box;
+    width: 50%;
+    height: 100%;
+    padding: 50px;
+    float: left;
+    background: #222;
+}
+
+.cards.active:after {
+    color: black;
+    background: #59da59;
+}
+
+.card-played {
+    background: #ca4444;
+    height: 100%;
+    width: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.opponent.player .profile {
+    width: 100%;
+    background: #b73e3e;
+    color:white;
+}
+.resource.active{
+    color: #3ba14d;
 }

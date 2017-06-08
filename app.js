@@ -26,7 +26,8 @@ var users = [],
     beginRound = 0;
 io.on('connection', function (socket) {
     // console.log('Connected socket: ' + socket.id);
-
+    if(!users.length)
+        socket.emit('redirect');
 
     socket.on('login', function (name, cb) {
         var user = {name: name, hp: 100, id: this.id, cards: cards};
@@ -44,7 +45,6 @@ io.on('connection', function (socket) {
         var opponent = this.getOpponent();
 
         if(opponent.cardPlayed){
-            this.getUser().cardPlayed = {att: opponent.cardPlayed.def, def: 0};
             attack(opponent);
         }
         io.to(opponent.id).emit('turnAvailable');
@@ -80,21 +80,37 @@ io.on('connection', function (socket) {
 
     socket.getOpponent = function(){
         return users.filter(v => v.id !== this.id)[0];
-    }
+    };
 
     socket.getUser = function () {
         return users.filter(v => v.id === this.id)[0];
-    }
+    };
+
+    socket.on('disconnect', function () {
+        io.emit('redirect');
+        users = [];
+    });
 
 });
 
 function attack(opponent) {
     var user1 = users[0],
         user2 = users[1];
-    user1.hp = user2.cardPlayed.att - user1.cardPlayed.def;
-    user2.hp = user1.cardPlayed.att - user2.cardPlayed.def;
+
+    if(user1.cardPlayed && user2.cardPlayed){
+        user1.hp -= user2.cardPlayed.att - user1.cardPlayed.def;
+        user2.hp -= user1.cardPlayed.att - user2.cardPlayed.def;
+    }else if(user1.cardPlayed){
+        user2.hp -= user1.cardPlayed.att;
+    }else if(user2.cardPlayed){
+        user1.hp -= user2.cardPlayed.att;
+    }
+
 
     io.to(user1.id).emit('endRound', user1.hp, user2.hp);
     io.to(user2.id).emit('endRound', user2.hp, user1.hp);
     io.to(opponent.id).emit('turnAvailable');
+
+
+    user1.cardPlayed = user2.cardPlayed = null;
 }
