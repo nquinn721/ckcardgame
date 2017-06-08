@@ -1,6 +1,9 @@
 <div class="game-area" ng-class="{damaged: g.playerDamaged}">
-    <div class="lose" ng-if="g.game.loss">You Lose!</div>
-    <div class="win" ng-if="g.game.win">You Win!</div>
+    <div class="end-game">x
+        <div class="lose" ng-if="g.game.loss">You Lose!</div>
+        <div class="win" ng-if="g.game.win">You Win!</div>
+    </div>
+
     <div class="opponent player">
         <div class="profile bg-danger">
             <div ng-if="!g.game.opponent.name">Waiting for opponent!</div>

@@ -47,7 +47,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
 
 
         if(self.game.player.hp <= 0){
-            self.game.end(false);
+            self.game.end(true);
             socket.emit('endGame', false);
         }
     });
@@ -57,7 +57,6 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     });
 
     socket.on('redirect', function () {
-        console.log('redirect');
         $location.path('/');
     });
 });
