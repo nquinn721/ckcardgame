@@ -2,6 +2,7 @@ var express = require('express'),
     app = express(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
+var fs = require('fs');
 
 
 app.use(express.static(__dirname + '/bower_components'));
