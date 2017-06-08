@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Card Game</title>
+    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body ng-controller="main as main">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">{{main.title}}</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <ng-view></ng-view>
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="angular/angular.min.js"></script>
+<script src="angular-route/angular-route.min.js"></script>
+<script src="angular-socket-io/socket.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/controller/main.js"></script>
+<script src="js/controller/game.js"></script>
+<script src="js/controller/login.js"></script>
+<script src="js/factory/socket.js"></script>
+<script src="js/factory/game.js"></script>
+<script src="js/factory/player.js"></script>
+<script src="js/factory/card.js"></script>
+<script src="js/routes.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>

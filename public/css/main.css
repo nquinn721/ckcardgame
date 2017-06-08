@@ -1,0 +1,79 @@
+.player {
+    height: 150px;
+    background: #eee;
+}
+
+.player > div {
+    float: left;
+    height: 100%;
+}
+
+.player .profile {
+    width: 25%;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    font-size: 25px;
+}
+
+.player .cards {
+    width: 15%;
+    background: #222;
+}
+
+.player .cards:after {
+    content: "Cards";
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player .cards-drawn {
+    width: 60%;
+    background: #444;
+}
+
+.player .cards-drawn .card {
+    width: 16%;
+    height: 84%;
+    color: white;
+    cursor: pointer;
+    border: 1px solid black;
+    margin: 4% 2%;
+    display: flex;
+    float: left;
+    align-items: center;
+    background: #555;
+    justify-content: center;
+    box-shadow: 0 0 2px black;
+    border-radius: 5px;
+    flex-direction: column;
+}
+.resources {
+    width: 21%;
+    height: 100%;
+    color: white;
+    padding: 10px;
+    float: left;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.cards-played {
+    height: 500px;
+    background: #ccc;
+}
+
+.name{
+    font-size: 18px;
+}
+.attrs {
+    font-size: 12px;
+}
