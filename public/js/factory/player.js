@@ -6,7 +6,7 @@ app.factory('Player', function (Card, $timeout) {
         this.name = data.name;
         this.hp = data.hp;
         this.cards = [];
-        this.drawnCards = [];
+        this.characters = {};
         this.brick = 0;
         this.meat = 0;
         this.water = 0;
@@ -37,8 +37,8 @@ app.factory('Player', function (Card, $timeout) {
                     this[i] -= card.resourcesNeeded[i];
 
                 this.playedCard = card;
-                for(var i = 0; i < this.drawnCards.length; i++)
-                    if(this.drawnCards[i] === card)this.drawnCards.splice(i, 1);
+                for(var i in this.characters)
+                    if(this.characters[i][0] === card)this.characters[i].pop();
                 return true;
             }else{
                 this.cantPlayCard = true;
@@ -63,13 +63,14 @@ app.factory('Player', function (Card, $timeout) {
                 if(card.type === 'resource'){
                     this[card.name]++;
                     this['new' + card.name] = true;
-                    console.log(this);
 
                     $timeout(function () {
                         self['new' + card.name] = false;
                     }, 2000);
                 }else{
-                    this.drawnCards.push(card);
+                    if(!this.characters[card.name])
+                        this.characters[card.name] = [];
+                    this.characters[card.name].push(card);
                 }
 
             }

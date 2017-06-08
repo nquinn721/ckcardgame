@@ -1,4 +1,4 @@
-app.controller('game', function (socket, game, $routeParams, $location) {
+app.controller('game', function (socket, game, $routeParams, $location, $timeout) {
     var self = this;
 
     this.game = new game($routeParams.user);
@@ -34,10 +34,17 @@ app.controller('game', function (socket, game, $routeParams, $location) {
     });
 
     socket.on('endRound', function (userhp, opponenthp) {
+        self.playerDamaged = self.game.player.hp - userhp;
+
         self.game.player.hp = userhp;
         self.game.opponent.hp = opponenthp;
-        self.game.player.playedCard = null;
-        self.game.opponent.playedCard = null;
+
+        $timeout(function () {
+            self.game.player.playedCard = null;
+            self.game.opponent.playedCard = null;
+            self.playerDamaged = null;
+        }, 4000);
+
 
         if(self.game.player.hp <= 0){
             self.game.end(false);

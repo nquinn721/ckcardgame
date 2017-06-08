@@ -95,11 +95,17 @@ io.on('connection', function (socket) {
 
 function attack(opponent) {
     var user1 = users[0],
-        user2 = users[1];
+        user2 = users[1],
+        dam1, dam2;
 
     if(user1.cardPlayed && user2.cardPlayed){
-        user1.hp -= user2.cardPlayed.att - user1.cardPlayed.def;
-        user2.hp -= user1.cardPlayed.att - user2.cardPlayed.def;
+        dam1 = (user2.cardPlayed.att - user1.cardPlayed.def);
+        dam2 = (user1.cardPlayed.att - user2.cardPlayed.def);
+
+        if(dam1 > 0)
+            user1.hp -= dam1;
+        if(dam2 > 0)
+            user2.hp -= dam2;
     }else if(user1.cardPlayed){
         user2.hp -= user1.cardPlayed.att;
     }else if(user2.cardPlayed){
@@ -112,5 +118,6 @@ function attack(opponent) {
     io.to(opponent.id).emit('turnAvailable');
 
 
-    user1.cardPlayed = user2.cardPlayed = null;
+    user1.cardPlayed = null;
+    user2.cardPlayed = null;
 }
