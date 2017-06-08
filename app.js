@@ -44,7 +44,7 @@ io.on('connection', function (socket) {
     socket.on('turnPlayed', function () {
         var opponent = this.getOpponent();
 
-        if(opponent.cardPlayed){
+        if(opponent && opponent.cardPlayed){
             attack(opponent);
         }
         io.to(opponent.id).emit('turnAvailable');
