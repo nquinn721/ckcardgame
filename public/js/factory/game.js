@@ -22,6 +22,8 @@ app.factory('game', function (Player) {
             }else{
                 this.win = true;
             }
+
+            this.gameEnded = true;
         }
     };
 
