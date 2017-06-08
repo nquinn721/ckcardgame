@@ -1,4 +1,5 @@
 <div class="game-area" ng-class="{damaged: g.playerDamaged}">
+    <div ng-if="g.disconnected">YOU GOT DISCONNECTED</div>
     <div class="end-game" ng-if="g.game.gameEnded">
         <div class="lose" ng-if="g.game.lose">You Lose!</div>
         <div class="win" ng-if="g.game.win">You Win!</div>

@@ -59,4 +59,8 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     socket.on('redirect', function () {
         $location.path('/');
     });
+
+    socket.on('disconnected', function () {
+        self.disconnected = true;
+    });
 });

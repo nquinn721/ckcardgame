@@ -30,7 +30,6 @@ io.on('connection', function (socket) {
         socket.emit('redirect');
 
     socket.on('login', function (name, cb) {
-        users = [];
         var user = {name: name, hp: 100, id: this.id, cards: cards};
         this.user = user;
         var opponent = this.getOpponent();
@@ -92,6 +91,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         // io.emit('redirect');
         // users = [];
+        socket.emit('disconnected');
     });
 
 });
