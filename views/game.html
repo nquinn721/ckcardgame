@@ -38,7 +38,7 @@
 
     </div>
     <div class="players-cards">
-        <div class="card" ng-repeat="card in g.game.player.characters" ng-click="g.playCard(card[0])">
+        <div class="card" ng-repeat="card in g.game.player.characters" ng-click="g.playCard(card[0])" ng-show="card.length">
             <div>
                 <div class="total">{{card.length}}</div>
                 <div class="name">{{card[0].name}}</div>
