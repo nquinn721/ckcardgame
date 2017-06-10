@@ -3,15 +3,17 @@
     <div class="image">
         <img ng-src="img/{{card.name.toLowerCase()}}.png" alt="">
     </div>
-    <div class="name">{{card.name}}</div>
+    <div class="name">{{card.name.substr(0,1).toUpperCase() + card.name.substr(1)}}</div>
     <div class="stats">
-        <div>Attack: <span>{{card.att}}</span></div>
-        <div>Defense <span>{{card.def}}</span></div>
+        <div ng-if="card.att">Attack: <span>{{card.att}}</span></div>
+        <div ng-if="card.def">Defense <span>{{card.def}}</span></div>
     </div>
-    <div class="resources-needed">
+    <div class="resources-needed" ng-if="card.resourcesNeeded">
         <div>Resourced Needed</div>
-        <div>Meat: <span>{{card.resourcesNeeded.meat}}</span></div>
-        <div>Water: <span>{{card.resourcesNeeded.water}}</span></div>
+        <div ng-repeat="(resource, cost) in card.resourcesNeeded">
+            {{resource.substr(0,1).toUpperCase() + resource.substr(1)}}:
+            <span>{{cost}}</span>
+        </div>
     </div>
 </div>
 

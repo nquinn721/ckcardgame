@@ -22,15 +22,16 @@ app.get('/', function (req, res) {
 
 
 var users = [],
-    cards = require('./lib/cards'),
-    beginRound = 0;
+    cards = require('./lib/cards');
+
+
 io.on('connection', function (socket) {
     // console.log('Connected socket: ' + socket.id);
     if(!users.length)
         socket.emit('redirect');
 
     socket.on('login', function (name, cb) {
-        var user = {name: name, hp: 100, id: this.id, cards: cards};
+        var user = {name: name, hp: 100, id: this.id, cards: cards, cardsPlayed: [], cardPlayed: {att: 0, def: 0}};
         this.user = user;
         var opponent = this.getOpponent();
         users.push(this.user);
@@ -57,23 +58,21 @@ io.on('connection', function (socket) {
     });
 
     socket.on('playCard', function (card) {
+        this.user.cardsPlayed.push(card);
+    });
+
+    socket.on('finishTurn', function() {
         var opponent = this.getOpponent();
-        this.user.cardPlayed = card;
 
 
-        if(opponent){
-            io.to(opponent.id).emit('playCard', card);
-            beginRound++;
 
-        }
-
-
-        if(opponent.cardPlayed){
-            attack(opponent);
+        if(opponent.cardsPlayed.length){
+            io.to(opponent.id).emit('playCard', this.user.cardsPlayed);
+            attack();
         }else{
             io.to(opponent.id).emit('turnAvailable');
         }
-    });
+    })
 
     socket.on('endGame', function () {
         var opponent = this.getOpponent();
@@ -101,10 +100,19 @@ io.on('connection', function (socket) {
 
 });
 
-function attack(opponent) {
+function attack() {
     var user1 = users[0],
         user2 = users[1],
         dam1, dam2;
+
+    for(var i = 0; i < user1.cardsPlayed.length; i++){
+        user1.cardPlayed.att += user1.cardsPlayed[i].att || 0;
+        user1.cardPlayed.def += user1.cardsPlayed[i].def || 0;
+    }
+    for(var i = 0; i < user2.cardsPlayed.length; i++){
+        user2.cardPlayed.att += user2.cardsPlayed[i].att || 0;
+        user2.cardPlayed.def += user2.cardsPlayed[i].def || 0;
+    }
 
     if(user1.cardPlayed && user2.cardPlayed){
         dam1 = (user2.cardPlayed.att - user1.cardPlayed.def);

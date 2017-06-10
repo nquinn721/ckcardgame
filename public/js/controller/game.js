@@ -2,7 +2,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     var self = this;
 
     this.game = new game($routeParams.user);
-
+    // this.turnAvailable = true;
 
     this.playCard = function (card) {
         if(this.turnAvailable && this.game.player.playCard(card)){
@@ -12,16 +12,19 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     };
 
     this.drawCard = function () {
-        if(this.turnAvailable){
+        if(this.turnAvailable && !this.drawnCard){
             this.game.player.drawCard();
+            this.drawnCard = true;
+        }else{
             this.turnAvailable = false;
-            socket.emit('turnPlayed');
+            this.drawnCard = false;
+            socket.emit('finishTurn');
         }
 
     };
 
+
     this.reset = function() {
-        console.log('reset');
         socket.emit('reset');  
     };
 
@@ -35,7 +38,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     });
 
     socket.on('playCard', function (card) {
-        self.game.opponent.showCard(card);
+        self.game.opponent.showCards(card);
     });
 
     socket.on('endRound', function (userhp, opponenthp) {

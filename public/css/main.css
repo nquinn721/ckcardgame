@@ -152,7 +152,6 @@ html, body {
     height: 27%;
     display: flex;
     width: 100%;
-    justify-content:;
     padding: 15px;
 }
 .players-cards >
@@ -278,7 +277,6 @@ html, body {
     height: 60%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
 }
 
 .playing-field > div {
@@ -286,8 +284,9 @@ html, body {
     width: 33.3333%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     position: relative;
+    padding: 10px;
 }
 
 .draw-cards img {
@@ -358,4 +357,8 @@ button.reset.ng-scope {
 }
 .show-drawn-card {
     position: absolute;
+}
+.finish{
+    color:red;
+    background: rgba(0, 0, 0, 0.5);
 }
