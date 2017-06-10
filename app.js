@@ -80,6 +80,11 @@ io.on('connection', function (socket) {
         io.to(opponent.id).emit('endGame');
     });
 
+    socket.on('reset', function () {
+        users = [];
+        io.emit('redirect');
+    });
+
     socket.getOpponent = function(){
         return users.filter(v => v.id !== this.id)[0];
     };

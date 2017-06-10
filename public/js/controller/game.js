@@ -20,6 +20,10 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
 
     };
 
+    this.reset = function() {
+        socket.emit('reset');  
+    };
+
     socket.emit('getUsers');
     socket.on('updateUsers', function (users) {
         self.game.createPlayers(users);
