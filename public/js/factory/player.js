@@ -81,7 +81,7 @@ app.factory('Player', function (Card, $timeout) {
                     }
 
                 }
-            }.bind(this), 1);
+            }.bind(this), 800);
 
         }
     };
