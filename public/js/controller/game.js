@@ -18,6 +18,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
         }else{
             this.turnAvailable = false;
             this.drawnCard = false;
+            this.attackComing = false;
             socket.emit('finishTurn');
         }
 
@@ -39,6 +40,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
 
     socket.on('playCard', function (card) {
         self.game.opponent.showCards(card);
+        self.attackComing = true;
     });
 
     socket.on('endRound', function (userhp, opponenthp) {

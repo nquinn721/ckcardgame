@@ -1,6 +1,6 @@
 <div class="player main">
-    <div class="profile" ng-class="{playerDamaged: g.playerDamaged}">
-        <div class="player-info">
+    <div class="profile">
+        <div class="player-info" ng-class="{playerDamaged: g.playerDamaged}">
             <div class="name">{{g.game.player.name}}</div>
             <div class="hp">
                 HP: {{g.game.player.hp}}
@@ -27,7 +27,7 @@
     </div>
 
 
-    <div class="board">
+    <div class="board" ng-class="{attack: g.attackComing}">
 
         <div class="opponent player">
             <div class="profile bg-danger">

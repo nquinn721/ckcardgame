@@ -42,17 +42,6 @@ io.on('connection', function (socket) {
         cb();
     });
 
-    socket.on('turnPlayed', function () {
-        var opponent = this.getOpponent();
-
-        if(opponent && opponent.cardPlayed){
-            attack(opponent);
-        }
-
-        if(opponent)
-            io.to(opponent.id).emit('turnAvailable');
-    });
-
     socket.on('getUsers', function (cb) {
         io.emit('updateUsers', users);
     });
@@ -66,12 +55,11 @@ io.on('connection', function (socket) {
 
 
 
-        if(opponent.cardsPlayed.length){
+        if(this.user.cardsPlayed.length || opponent.cardsPlayed.length){
             io.to(opponent.id).emit('playCard', this.user.cardsPlayed);
             attack();
-        }else{
-            io.to(opponent.id).emit('turnAvailable');
         }
+        io.to(opponent.id).emit('turnAvailable');
     })
 
     socket.on('endGame', function () {

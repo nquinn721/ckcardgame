@@ -130,6 +130,9 @@ html, body {
 .player-damaged{
     background: rgba(238, 6, 2, 0.75);
 }
+.attack{
+    background:#6b1f1f;
+}
 .total.ng-binding {
     position: absolute;
     top: -8px;
@@ -226,6 +229,9 @@ html, body {
     position: relative;
     background: #1b584a;
     height: 100%;
+}
+.board.attack{
+    background: #6b1f1f;
 }
 
 .cards {
