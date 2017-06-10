@@ -79,7 +79,7 @@ app.factory('Player', function (Card, $timeout) {
                     }
 
                 }
-            }, 1000);
+            }.bind(this), 1000);
 
         }
     };
