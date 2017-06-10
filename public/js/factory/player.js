@@ -17,8 +17,8 @@ app.factory('Player', function (Card, $timeout) {
     }
 
     Player.prototype = {
-        showCard: function(card){
-            this.playedCards = card;
+        showCards: function(cards){
+            this.cardsPlayed = cards;
         },
         playCard: function (card) {
             if(this.cardPlayed)return;
@@ -40,6 +40,8 @@ app.factory('Player', function (Card, $timeout) {
                 this.cardsPlayed.push(card);
                 for(var i in this.characters)
                     if(this.characters[i][0] === card)this.characters[i].pop();
+
+                return true;
             }else{
                 this.cantPlayCard = true;
                 $timeout(function(){
@@ -79,7 +81,7 @@ app.factory('Player', function (Card, $timeout) {
                     }
 
                 }
-            }.bind(this), 800);
+            }.bind(this), 1);
 
         }
     };

@@ -47,18 +47,21 @@ io.on('connection', function (socket) {
     });
 
     socket.on('playCard', function (card) {
-        this.user.cardsPlayed.push(card);
+        var user = this.getUser();
+        user.cardsPlayed.push(card);
     });
 
     socket.on('finishTurn', function() {
-        var opponent = this.getOpponent();
+        var opponent = this.getOpponent(),
+            user = this.getUser();
 
 
+        if(user.cardsPlayed.length)
+            io.to(opponent.id).emit('playCard', user.cardsPlayed);
 
-        if(this.user.cardsPlayed.length || opponent.cardsPlayed.length){
-            io.to(opponent.id).emit('playCard', this.user.cardsPlayed);
+        if(opponent.cardsPlayed.length)
             attack();
-        }
+
         io.to(opponent.id).emit('turnAvailable');
     })
 
@@ -93,6 +96,8 @@ function attack() {
         user2 = users[1],
         dam1, dam2;
 
+        console.log(user1);
+
     for(var i = 0; i < user1.cardsPlayed.length; i++){
         user1.cardPlayed.att += user1.cardsPlayed[i].att || 0;
         user1.cardPlayed.def += user1.cardsPlayed[i].def || 0;
@@ -119,8 +124,6 @@ function attack() {
 
     io.to(user1.id).emit('endRound', user1.hp, user2.hp);
     io.to(user2.id).emit('endRound', user2.hp, user1.hp);
-    io.to(opponent.id).emit('turnAvailable');
-
 
     user1.cardPlayed = null;
     user2.cardPlayed = null;

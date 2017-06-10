@@ -2,13 +2,11 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     var self = this;
 
     this.game = new game($routeParams.user);
-    // this.turnAvailable = true;
+    this.turnAvailable = true;
 
     this.playCard = function (card) {
-        if(this.turnAvailable && this.game.player.playCard(card)){
+        if(this.turnAvailable && this.game.player.playCard(card))
             socket.emit('playCard', card);
-            this.turnAvailable = false;
-        }
     };
 
     this.drawCard = function () {
@@ -50,8 +48,8 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
         self.game.opponent.hp = opponenthp;
 
         $timeout(function () {
-            self.game.player.playedCard = null;
-            self.game.opponent.playedCard = null;
+            self.game.player.playedCards = [];
+            self.game.opponent.playedCard = [];
             self.playerDamaged = null;
         }, 4000);
 
