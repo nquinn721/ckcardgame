@@ -68,7 +68,7 @@ app.factory('Player', function (Card, $timeout) {
                 self.drawnCard = false;
                 if(card){
                     if(card.type === 'resource'){
-                        this[card.name]++;
+                        this[card.name] += card.total;
                         this['new' + card.name] = true;
 
                         $timeout(function () {
@@ -81,7 +81,7 @@ app.factory('Player', function (Card, $timeout) {
                     }
 
                 }
-            }.bind(this), 800);
+            }.bind(this), 1)//800);
 
         }
     };

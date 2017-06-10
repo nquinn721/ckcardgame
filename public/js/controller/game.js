@@ -48,8 +48,8 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
         self.game.opponent.hp = opponenthp;
 
         $timeout(function () {
-            self.game.player.playedCards = [];
-            self.game.opponent.playedCard = [];
+            self.game.player.cardsPlayed = [];
+            self.game.opponent.cardsPlayed = [];
             self.playerDamaged = null;
             this.attackComing = false;
         }, 2000);

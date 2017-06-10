@@ -71,7 +71,6 @@
             <div class="opponents-card">
                 <!-- <card ng-show="g.game.opponent.playedCard" card="g.game.opponent.playedCard"></card> -->
                 <div class="card" ng-repeat="character in g.game.opponent.cardsPlayed track by $index">
-                    <div class="total">{{character.length}}</div>
                     <div class="image">
                         <img ng-src="img/{{character.name.toLowerCase()}}.png" alt="">
                     </div>
