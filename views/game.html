@@ -38,12 +38,8 @@
 
         <div class="playing-field">
             <div class="players-card">
-                <div class="card-played" ng-show="g.game.player.playedCard">
-                    {{g.game.player.playedCard.name}}<br>
-                    Attack: {{g.game.player.playedCard.att}}<br>
-                    Defense: {{g.game.player.playedCard.def}}<br>
-
-                </div>
+                <card ng-show="g.game.player.playedCard" card="g.game.player.playedCard"></card>
+                <!-- <card card="g.game.player.cards[0]"></card> -->
             </div>
             <div class="draw-cards">
                 <div class="draw-card" ng-class="{active: g.turnAvailable}">
@@ -52,35 +48,28 @@
                 <img src="https://nunoo101.files.wordpress.com/2014/10/playing-card12.jpg" alt="" ng-click="g.drawCard()" >
             </div>
             <div class="opponents-card">
-                <div class="card-played" ng-show="g.game.opponent.playedCard">
-                    {{g.game.opponent.playedCard.name}}<br>
-                    Attack: {{g.game.opponent.playedCard.att}}<br>
-                    Defense: {{g.game.opponent.playedCard.def}}<br>
-                </div>
+                <card ng-show="g.game.opponent.playedCard" card="g.game.opponent.playedCard"></card>
+
             </div>
 
         </div>
         <div class="players-cards">
-            <div ng-repeat="card in g.game.player.characters" ng-click="g.playCard(card[0])" ng-show="card[0]"  card="card[0]">
-                <div class="card">
+                <div class="card" ng-repeat="character in g.game.player.characters" ng-click="g.playCard(character[0])">
+                    <div class="total">{{character.length}}</div>
                     <div class="image">
-                        <img ng-src="img/{{card[0].name.toLowerCase()}}.png" alt="">
+                        <img ng-src="img/{{character[0].name.toLowerCase()}}.png" alt="">
                     </div>
-                    <div class="name">{{card[0].name}}</div>
+                    <div class="name">{{character[0].name}}</div>
                     <div class="stats">
-                        <div>Attack: <span>{{card[0].att}}</span></div>
-                        <div>Defense <span>{{card[0].def}}</span></div>
+                        <div>Attack: <span>{{character[0].att}}</span></div>
+                        <div>Defense <span>{{character[0].def}}</span></div>
                     </div>
                     <div class="resources-needed">
                         <div>Resourced Needed</div>
-                        <div>Meat: <span>{{card[0].resourcesNeeded.meat}}</span></div>
-                        <div>Water: <span>{{card[0].resourcesNeeded.water}}</span></div>
+                        <div>Meat: <span>{{character[0].resourcesNeeded.meat}}</span></div>
+                        <div>Water: <span>{{character[0].resourcesNeeded.water}}</span></div>
                     </div>
                 </div>
-
-
-
-            
             </div>
         </div>
 

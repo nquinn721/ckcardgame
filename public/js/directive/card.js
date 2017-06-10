@@ -1,4 +1,4 @@
-app.directive('card-tag', function () {
+app.directive('card', function () {
 	return {
 		restrict: 'E',
 		templateUrl: 'card.html',
@@ -6,10 +6,8 @@ app.directive('card-tag', function () {
 		controller: 'game',
 		controllerAs: 'g',
 		scope: {
-			card: '='
-		},
-		// link: function($scope, $el, $attrs) {
-			
-		// }
+			card: '=',
+			total: '='
+		}
 	}
 })

@@ -1,6 +1,7 @@
 <div class="card">
+    <div class="total" ng-if="total">{{total}}</div>
     <div class="image">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQteVWLqc0xaGWdNikiDZE7sqXiWN6Ba6dh65J5v7S74XurynwaVQ" alt="">
+        <img ng-src="img/{{card.name.toLowerCase()}}.png" alt="">
     </div>
     <div class="name">{{card.name}}</div>
     <div class="stats">

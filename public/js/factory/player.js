@@ -1,6 +1,5 @@
 
 app.factory('Player', function (Card, $timeout) {
-    console.log('player');
     function Player(game, data) {
         this.game = game;
         this.id = data.id;
@@ -21,7 +20,6 @@ app.factory('Player', function (Card, $timeout) {
             this.playedCard = card;
         },
         playCard: function (card) {
-            console.log('card is getting played');
             if(this.cardPlayed)return;
 
 
@@ -70,15 +68,14 @@ app.factory('Player', function (Card, $timeout) {
                         self['new' + card.name] = false;
                     }, 2000);
                 }else{
-                    console.log(this.meat, card.name);
                     if(!this.characters[card.name])
                         this.characters[card.name] = [];
                     this.characters[card.name].push(card);
+                    console.log(this.characters);
                 }
 
             }
 
-            console.log(this);
 
         }
     };
