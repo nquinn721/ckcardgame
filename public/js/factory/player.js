@@ -62,24 +62,24 @@ app.factory('Player', function (Card, $timeout) {
             
 
             this.drawnCard = card;
-            // $timeout(function() {
-            //     self.drawnCard = false;
-                // if(card){
-                //     if(card.type === 'resource'){
-                //         this[card.name]++;
-                //         this['new' + card.name] = true;
+            $timeout(function() {
+                self.drawnCard = false;
+                if(card){
+                    if(card.type === 'resource'){
+                        this[card.name]++;
+                        this['new' + card.name] = true;
 
-                //         $timeout(function () {
-                //             self['new' + card.name] = false;
-                //         }, 2000);
-                //     }else{
-                //         if(!this.characters[card.name])
-                //             this.characters[card.name] = [];
-                //         this.characters[card.name].push(card);
-                //     }
+                        $timeout(function () {
+                            self['new' + card.name] = false;
+                        }, 2000);
+                    }else{
+                        if(!this.characters[card.name])
+                            this.characters[card.name] = [];
+                        this.characters[card.name].push(card);
+                    }
 
-                // }
-            // }, 1000);
+                }
+            }, 1000);
 
         }
     };
