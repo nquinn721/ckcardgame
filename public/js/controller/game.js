@@ -21,6 +21,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     };
 
     this.reset = function() {
+        console.log('reset');
         socket.emit('reset');  
     };
 

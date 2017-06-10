@@ -25,6 +25,10 @@ html, body {
     width: 100%;
     background: #111;
     color: white;
+    z-index: 1;
+}
+.main .profile{
+    position: absolute;
 }
 
 .player .cards {
@@ -351,4 +355,7 @@ button.reset.ng-scope {
     background: #b75252;
     border: none;
     width: 97%;
+}
+.show-drawn-card {
+    position: absolute;
 }

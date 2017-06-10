@@ -47,6 +47,9 @@
                     Draw a card!
                 </div>
                 <img src="https://nunoo101.files.wordpress.com/2014/10/playing-card12.jpg" alt="" ng-click="g.drawCard()" >
+                <div class="show-drawn-card">
+                    <card ng-show="g.game.player.drawnCard" card="g.game.player.drawnCard">
+                </div>
             </div>
             <div class="opponents-card">
                 <card ng-show="g.game.opponent.playedCard" card="g.game.opponent.playedCard"></card>
