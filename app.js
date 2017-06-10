@@ -31,7 +31,14 @@ io.on('connection', function (socket) {
         socket.emit('redirect');
 
     socket.on('login', function (name, cb) {
-        var user = {name: name, hp: 100, id: this.id, cards: cards, cardsPlayed: [], cardPlayed: {att: 0, def: 0}};
+        var user = {
+            name: name, 
+            hp: 100, 
+            id: this.id, 
+            cards: cards, 
+            cardsPlayed: [], 
+            cardPlayed: {att: 0, def: 0}
+        };
         this.user = user;
         var opponent = this.getOpponent();
         users.push(this.user);
@@ -96,7 +103,7 @@ function attack() {
         user2 = users[1],
         dam1, dam2;
 
-        console.log(user1);
+
 
     for(var i = 0; i < user1.cardsPlayed.length; i++){
         user1.cardPlayed.att += user1.cardsPlayed[i].att || 0;
@@ -125,6 +132,6 @@ function attack() {
     io.to(user1.id).emit('endRound', user1.hp, user2.hp);
     io.to(user2.id).emit('endRound', user2.hp, user1.hp);
 
-    user1.cardPlayed = null;
-    user2.cardPlayed = null;
+    user1.cardPlayed = {att: 0, def: 0};
+    user2.cardPlayed = {att: 0, def: 0};
 }
