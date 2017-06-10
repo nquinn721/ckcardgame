@@ -135,4 +135,6 @@ function attack() {
 
     user1.cardPlayed = {att: 0, def: 0};
     user2.cardPlayed = {att: 0, def: 0};
+    user1.cardsPlayed = [];
+    user2.cardsPlayed = [];
 }

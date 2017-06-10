@@ -51,7 +51,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
             self.game.player.cardsPlayed = [];
             self.game.opponent.cardsPlayed = [];
             self.playerDamaged = null;
-            this.attackComing = false;
+            self.attackComing = false;
         }, 2000);
 
 
