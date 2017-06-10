@@ -51,7 +51,8 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
             self.game.player.playedCards = [];
             self.game.opponent.playedCard = [];
             self.playerDamaged = null;
-        }, 4000);
+            this.attackComing = false;
+        }, 2000);
 
 
         if(self.game.player.hp <= 0){
