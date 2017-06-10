@@ -55,7 +55,8 @@ io.on('connection', function (socket) {
 
     socket.on('playCard', function (card) {
         var user = this.getUser();
-        user.cardsPlayed.push(card);
+        if(user)
+            user.cardsPlayed.push(card);
     });
 
     socket.on('finishTurn', function() {
