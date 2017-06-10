@@ -68,20 +68,20 @@ app.factory('Player', function (Card, $timeout) {
                 self.drawnCard = false;
                 if(card){
                     if(card.type === 'resource'){
-                        this[card.name] += card.total;
-                        this['new' + card.name] = true;
+                        this[card.id] += card.total;
+                        this['new' + card.id] = true;
 
                         $timeout(function () {
-                            self['new' + card.name] = false;
+                            self['new' + card.id] = false;
                         }, 2000);
                     }else{
-                        if(!this.characters[card.name])
-                            this.characters[card.name] = [];
-                        this.characters[card.name].push(card);
+                        if(!this.characters[card.id])
+                            this.characters[card.id] = [];
+                        this.characters[card.id].push(card);
                     }
 
                 }
-            }.bind(this), 1)//800);
+            }.bind(this),800);
 
         }
     };

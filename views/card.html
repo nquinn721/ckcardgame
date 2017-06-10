@@ -3,7 +3,7 @@
     <div class="image">
         <img ng-src="img/{{card.name.toLowerCase()}}.png" alt="">
     </div>
-    <div class="name">{{card.name.substr(0,1).toUpperCase() + card.name.substr(1)}}</div>
+    <div class="name">{{card.name}}</div>
     <div class="stats">
         <div ng-if="card.att">Attack: <span>{{card.att}}</span></div>
         <div ng-if="card.def">Defense <span>{{card.def}}</span></div>

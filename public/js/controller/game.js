@@ -2,7 +2,7 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
     var self = this;
 
     this.game = new game($routeParams.user);
-    this.turnAvailable = true;
+    // this.turnAvailable = true;
 
     this.playCard = function (card) {
         if(this.turnAvailable && this.game.player.playCard(card))
