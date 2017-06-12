@@ -1,7 +1,6 @@
 
 app.factory('Player', function (Card, $timeout) {
-    function Player(game, data) {
-        this.game = game;
+    function Player(data) {
         this.id = data.id;
         this.name = data.name;
         this.hp = data.hp;
@@ -30,12 +29,6 @@ app.factory('Player', function (Card, $timeout) {
             }, 2000);
 
         },
-        hit: function (damage) {
-            this.hp - damage;
-
-            if(this.hp <= 0)
-                this.game.end();
-        },
         drawCard: function (card) {
             var self = this;
             if(!card)return;
@@ -57,9 +50,9 @@ app.factory('Player', function (Card, $timeout) {
                         }
                         self[card.type][card.id].push(card);
                     }
-
+                    console.log(self.creature, self.defense);
                 }
-            }.bind(this),10);
+            }.bind(this),800);
 
         },
 

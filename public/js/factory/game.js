@@ -10,10 +10,13 @@ app.factory('game', function (Player) {
             this.createPlayer(playerObj);
         },
         createPlayer: function (playerObj) {
-            this.player = new Player(this, playerObj);
+            this.player = new Player(playerObj);
+            this.player.type = 'player';
+            console.log(this.player);
         },
         createOpponent: function(opponent) {
-            this.opponent = new Player(this, opponent);
+            this.opponent = new Player(opponent);
+            this.opponent.type = 'opponent';
         },
         updatePlayers: function(players) {
             for(var i = 0; i < players.length; i++){
@@ -28,8 +31,10 @@ app.factory('game', function (Player) {
             this.opponent.update(opponent);
         },
         clearPlayedCards: function() {
-            this.player.hideCards();
-            this.opponent.hideCards();  
+            $timeout(function() {
+                this.player.hideCards();
+                this.opponent.hideCards();  
+            }, 2000);
         },
         getCard: function(id) {
             var card;

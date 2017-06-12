@@ -1,12 +1,18 @@
 app.controller('game', function (socket, game, $location, $timeout) {
     var self = this;
-
+    this.isadmin = false;
+    this.autoplay = false;
     this.game = game;
-    // this.turnAvailable = true;
+
+    // if(this.game.player.name.match(/admin|nate/i)){
+    //     this.isadmin = true;
+    // }
 
     this.playCard = function (card) {
-        if(this.turnAvailable)
+        if(this.turnAvailable){
+            this.attackComing = true;
             socket.emit('playCard', card, () => this.game.player.showCantPlayCard());
+        }
     };
 
     this.drawCard = function () {
@@ -21,7 +27,9 @@ app.controller('game', function (socket, game, $location, $timeout) {
         }
 
     };
-
+    this.pause = function() {
+        this.autoplay = !this.autoplay;
+    }
 
     this.reset = function() {
         socket.emit('reset');  
@@ -36,8 +44,15 @@ app.controller('game', function (socket, game, $location, $timeout) {
         if(opponentsPlayedCards && opponentsPlayedCards.length){
             self.game.opponent.showCards(opponentsPlayedCards);
             self.attackComing = true;
+        }else{
+            self.attackComing = false;
         }
         self.turnAvailable = true;
+
+        if(self.autoplay){
+            self.drawCard();
+            self.drawCard();
+        }
     });
 
     socket.on('endGame', this.game.end);

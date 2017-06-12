@@ -62,13 +62,15 @@ Game.prototype = {
 		var player = this.getPlayer(id),
 			opponent = this.getOpponent(id);
 
+		
+		player.turnAvailable = false;
+		opponent.turnAvailable = true;
+		opponent.socket.emit('turnAvailable', player.playedCards);
+
 		if(opponent.playedCards.length){
 			this.calculateDamage();
 			this.io.emit('clearPlayedCards');
 		}
-		player.turnAvailable = false;
-		opponent.turnAvailable = true;
-		opponent.socket.emit('turnAvailable', player.playedCards);
 	},
 	// End Turn
 

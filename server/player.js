@@ -7,7 +7,6 @@ function Player(playerObj) {
 	this.water = 0;
 	this.brick = 0;
 	this.creature = {};
-	this.resource = {};
 	this.defense  = {};
 	this.playedCards = [];
 	this.playedCard = {att: 0, def: 0};
@@ -40,14 +39,16 @@ Player.prototype = {
             }
         }
 
-        if(cardCanBePlayed){
+        if(cardCanBePlayed && card && this[card.type] && this[card.type][card.id]){
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
 
             this.playedCards.push(card);
+            
             for(var i in this[card.type])
-                if(this[card.type][i][0] === card)this[card.type][i].pop();
-        	
+                if(this[card.type][i][0].id === card.id)this[card.type][i].pop();
+
+
         	this.updateClient();
         }else{
         	cb();
@@ -59,6 +60,7 @@ Player.prototype = {
 		return Object.keys(this[type]).map(v => ({name: v, total: this[type][v].length}));
 	},
 	updateClient: function() {
+		// console.log(this.client());
 		this.socket.emit('updatePlayer', this.client());	
 	},
 	createOpponent: function(opponent) {
@@ -69,9 +71,8 @@ Player.prototype = {
 			name: this.name,
 			id: this.id,
 			hp: this.hp,
-			creatures: this.getList('creature'),
-			defense: this.getList('defense'),
-			resources: this.getList('resource'),
+			creature: this.creature,
+			defense: this.defense,
 			meat: this.meat,
 			water: this.water,
 			brick: this.brick,

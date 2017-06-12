@@ -1,14 +1,11 @@
-<div class="player main">
-    <div class="profile">
-        <div class="player-info" ng-class="{playerDamaged: g.playerDamaged}">
-            <div class="name">{{g.game.player.name}}</div>
-            <div class="hp">
-                HP: {{g.game.player.hp}}
-                <span class="player-damage" ng-show="g.game.player.showDamage">- {{g.game.player.showDamage}}</span>
-            </div>
+<div class="player">
+    <div class="profile" ng-if="player.name">
+        <div class="name">{{player.name}}</div>
+        <div class="hp">
+            HP: {{player.hp}}
+            <span class="enemy-damage" ng-show="player.showDamage">{{player.showDamage}}</span>
         </div>
-
         
     </div>
-
+    <div class="profile" ng-if="!player.name">Waiting for opponent!</div>
 </div>
