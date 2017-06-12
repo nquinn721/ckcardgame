@@ -3,8 +3,6 @@ app.directive('card', function () {
 		restrict: 'E',
 		templateUrl: 'card.html',
 		replace: true,
-		controller: 'game',
-		controllerAs: 'g',
 		scope: {
 			card: '=',
 			total: '='

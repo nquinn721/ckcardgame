@@ -57,6 +57,7 @@ var cards = [
     {
         name: 'T-Rex',
         id:  'trex',
+        type: 'creature',
         resourcesNeeded: {
             meat: 5,
             water: 3
@@ -65,8 +66,9 @@ var cards = [
         def: 5
     },
     {
-      name: 'Raptor',
-      id:  'raptor',
+        name: 'Raptor',
+        type: 'creature',
+        id:  'raptor',
         resourcesNeeded: {
             meat: 3,
             water: 5
@@ -76,6 +78,7 @@ var cards = [
     },
     {
         name: 'Fence',
+        type: 'defense',
         id:  'fence',
         resourcesNeeded: {
             brick: 2
@@ -84,6 +87,7 @@ var cards = [
     },
     {
         name: 'Wall',
+        type: 'defense',
         id:  'wall',
         resourcesNeeded: {
             brick: 3
@@ -92,6 +96,7 @@ var cards = [
     },
     {
         name: 'Fortress',
+        type: 'defense',
         id:  'fortress',
         resourcesNeeded: {
             brick: 8

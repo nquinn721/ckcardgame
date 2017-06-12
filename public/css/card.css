@@ -1,0 +1,70 @@
+.card {
+    padding: 10px;
+    box-shadow: 0 0 8px 1px #4e4d4d;
+    min-width: 80px;
+    font-size: 1rem;
+    max-height: 100%;
+    padding-top: 3px;
+    color: #c3c3c3;
+    height: 22vh;
+    max-width: 200px;
+    width: 8vw;
+    z-index: 10;
+    background: #111;
+}
+
+.card .image img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 5%;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 5%;
+    height: 70px;
+}
+
+.card .name {
+    font-size: 121%;
+    color: #eee;
+    font-weight: 900;
+}
+
+.card .resources-needed {
+    font-size: 14px;
+    display: flex;
+    height: 15px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.card .resources-needed > div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 22%;
+    height: 100%;
+}
+
+.card .resources-needed > div img {
+    width: 34%;
+    height: 69%;
+}
+
+.card .stats {
+    font-size: 12px;
+}
+
+.card .total.ng-binding {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    box-shadow:-1px 1px 3px black;
+    text-align: center;
+    border-radius: 100%;
+    height: 18px;
+    width: 18px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

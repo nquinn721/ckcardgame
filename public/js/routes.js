@@ -5,7 +5,7 @@ app.config(function ($routeProvider) {
            controller: 'login',
            controllerAs: 'l'
        })
-       .when('/game/:user', {
+       .when('/game/', {
            templateUrl: 'game.html',
            controller: 'game',
            controllerAs: 'g'

@@ -6,48 +6,28 @@ app.factory('Player', function (Card, $timeout) {
         this.name = data.name;
         this.hp = data.hp;
         this.cards = [];
-        this.characters = {};
-        this.cardsPlayed = [];
+        this.creature = {};
+        this.defense = {};
+        this.playedCards = [];
         this.brick = 0;
         this.meat = 0;
         this.water = 0;
 
-        for(var i = 0; i < data.cards.length; i++)
-            this.cards.push(new Card(data.cards[i]));
     }
 
     Player.prototype = {
         showCards: function(cards){
-            this.cardsPlayed = cards;
+            this.playedCards = cards;
         },
-        playCard: function (card) {
-            if(this.cardPlayed)return;
-
-
-            var cardCanBePlayed = true,
-                self = this;
-
-            for(var i in card.resourcesNeeded){
-                if(this[i] < card.resourcesNeeded[i]){
-                    cardCanBePlayed = false;
-                }
-            }
-
-            if(cardCanBePlayed){
-                for(var i in card.resourcesNeeded)
-                    this[i] -= card.resourcesNeeded[i];
-
-                this.cardsPlayed.push(card);
-                for(var i in this.characters)
-                    if(this.characters[i][0] === card)this.characters[i].pop();
-
-                return true;
-            }else{
-                this.cantPlayCard = true;
-                $timeout(function(){
-                    self.cantPlayCard = false;
-                }, 2000);
-            }
+        hideCards: function() {
+            this.playedCards = null;
+        },
+        showCantPlayCard: function () {
+            var self = this;
+            this.cantPlayCard = true;
+            $timeout(function(){
+                self.cantPlayCard = false;
+            }, 2000);
 
         },
         hit: function (damage) {
@@ -56,33 +36,43 @@ app.factory('Player', function (Card, $timeout) {
             if(this.hp <= 0)
                 this.game.end();
         },
-        drawCard: function () {
-            var index = Math.floor(Math.random() * this.cards.length),
-                card = this.cards[index]
-                self = this;
-
-            
+        drawCard: function (card) {
+            var self = this;
+            if(!card)return;
 
             this.drawnCard = card;
             $timeout(function() {
                 self.drawnCard = false;
                 if(card){
                     if(card.type === 'resource'){
-                        this[card.id] += card.total;
-                        this['new' + card.id] = true;
+                        self[card.id] += card.total;
+                        self['new' + card.id] = true;
 
                         $timeout(function () {
                             self['new' + card.id] = false;
                         }, 2000);
                     }else{
-                        if(!this.characters[card.id])
-                            this.characters[card.id] = [];
-                        this.characters[card.id].push(card);
+                        if(!self[card.type][card.id]){
+                            self[card.type][card.id] = [];
+                        }
+                        self[card.type][card.id].push(card);
                     }
 
                 }
-            }.bind(this),800);
+            }.bind(this),10);
 
+        },
+
+        update: function(userObj) {
+            var self = this;
+            if(userObj.hp < this.hp)
+                this.showDamage = this.hp - userObj.hp;
+            for(var i in userObj)
+                this[i] = userObj[i];
+
+            $timeout(function() {
+                self.showDamage = false;
+            }, 3000)
         }
     };
 

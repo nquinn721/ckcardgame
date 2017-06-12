@@ -1,0 +1,19 @@
+<div class="playing-field">
+    <div class="players-card">
+        <card ng-repeat="card in g.game.player.playedCards track by $index" card="card"></card>
+    </div>
+    <div class="draw-cards"> 
+        <div class="draw-card" ng-class="{active: (g.turnAvailable && !g.drawnCard), finish: (g.turnAvailable && g.drawnCard)}" >
+            <span ng-show="g.turnAvailable && !g.drawnCard">Draw a card!</span>
+            <span ng-show="g.turnAvailable && g.drawnCard">Finish Turn!</span>
+        </div>
+        <img src="img/draw-card.jpg" alt="" ng-click="g.drawCard()" >
+        <div class="show-drawn-card">
+            <card ng-show="g.game.player.drawnCard" card="g.game.player.drawnCard">
+        </div>
+    </div>
+    <div class="opponents-card">
+        <card ng-repeat="card in g.game.opponent.playedCards track by $index" card="g.game.opponent.playedCard"></card>
+    </div>
+
+</div>

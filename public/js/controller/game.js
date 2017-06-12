@@ -1,23 +1,23 @@
-app.controller('game', function (socket, game, $routeParams, $location, $timeout) {
+app.controller('game', function (socket, game, $location, $timeout) {
     var self = this;
 
-    this.game = new game($routeParams.user);
+    this.game = game;
     // this.turnAvailable = true;
 
     this.playCard = function (card) {
-        if(this.turnAvailable && this.game.player.playCard(card))
-            socket.emit('playCard', card);
+        if(this.turnAvailable)
+            socket.emit('playCard', card, () => this.game.player.showCantPlayCard());
     };
 
     this.drawCard = function () {
+        this.attackComing = false;
         if(this.turnAvailable && !this.drawnCard){
-            this.game.player.drawCard();
+            socket.emit('drawCard', (card) => this.game.player.drawCard(card));
             this.drawnCard = true;
         }else{
             this.turnAvailable = false;
             this.drawnCard = false;
-            this.attackComing = false;
-            socket.emit('finishTurn');
+            socket.emit('endTurn');
         }
 
     };
@@ -27,43 +27,20 @@ app.controller('game', function (socket, game, $routeParams, $location, $timeout
         socket.emit('reset');  
     };
 
-    socket.emit('getUsers');
-    socket.on('updateUsers', function (users) {
-        self.game.createPlayers(users);
-    });
+    socket.on('updatePlayers', v => this.game.updatePlayers(v));
+    socket.on('updatePlayer', v => this.game.updatePlayer(v));
+    socket.on('updateOpponent', v => this.game.updateOpponent(v));
+    socket.on('clearPlayedCards', v => this.game.clearPlayedCards());
 
-    socket.on('turnAvailable', function () {
+    socket.on('turnAvailable', function (opponentsPlayedCards) {
+        if(opponentsPlayedCards && opponentsPlayedCards.length){
+            self.game.opponent.showCards(opponentsPlayedCards);
+            self.attackComing = true;
+        }
         self.turnAvailable = true;
     });
 
-    socket.on('playCard', function (card) {
-        self.game.opponent.showCards(card);
-        self.attackComing = true;
-    });
-
-    socket.on('endRound', function (userhp, opponenthp) {
-        self.playerDamaged = self.game.player.hp - userhp;
-
-        self.game.player.hp = userhp;
-        self.game.opponent.hp = opponenthp;
-
-        $timeout(function () {
-            self.game.player.cardsPlayed = [];
-            self.game.opponent.cardsPlayed = [];
-            self.playerDamaged = null;
-            self.attackComing = false;
-        }, 2000);
-
-
-        if(self.game.player.hp <= 0){
-            self.game.end(true);
-            socket.emit('endGame', false);
-        }
-    });
-
-    socket.on('endGame', function () {
-        self.game.end();
-    });
+    socket.on('endGame', this.game.end);
 
     socket.on('redirect', function () {
         $location.path('/');

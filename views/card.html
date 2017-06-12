@@ -1,4 +1,10 @@
 <div class="card">
+    <div class="resources-needed" ng-if="card.resourcesNeeded">
+        <div ng-repeat="(resource, cost) in card.resourcesNeeded">
+            <span>{{cost}}</span>
+            <img ng-src="img/{{resource}}.png" alt="">
+        </div>
+    </div>
     <div class="total" ng-if="total">{{total}}</div>
     <div class="image">
         <img ng-src="img/{{card.name.toLowerCase()}}.png" alt="">
@@ -8,13 +14,7 @@
         <div ng-if="card.att">Attack: <span>{{card.att}}</span></div>
         <div ng-if="card.def">Defense <span>{{card.def}}</span></div>
     </div>
-    <div class="resources-needed" ng-if="card.resourcesNeeded">
-        <div>Resourced Needed</div>
-        <div ng-repeat="(resource, cost) in card.resourcesNeeded">
-            {{resource.substr(0,1).toUpperCase() + resource.substr(1)}}:
-            <span>{{cost}}</span>
-        </div>
-    </div>
+    
 </div>
 
 

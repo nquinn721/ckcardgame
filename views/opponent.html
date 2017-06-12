@@ -1,0 +1,10 @@
+<div class="opponent player">
+    <div class="profile" ng-if="g.game.opponent">
+        <div class="name">{{g.game.opponent.name}}</div>
+        <div class="hp">
+            HP: {{g.game.opponent.hp}}
+            <span class="enemy-damage" ng-show="g.game.opponent.showDamage">{{g.game.player.showDamage}}</span>
+        </div>
+    </div>
+    <div class="profile" ng-if="!g.game.opponent">Waiting for opponent!</div>
+</div>

@@ -1,8 +1,8 @@
 var express = require('express'),
     app = express(),
     server = require('http').Server(app),
-    io = require('socket.io')(server);
-var fs = require('fs');
+    io = require('socket.io')(server),
+    fs = require('fs');
 
 
 app.use(express.static(__dirname + '/bower_components'));
@@ -21,120 +21,51 @@ app.get('/', function (req, res) {
 });
 
 
-var users = [],
-    cards = require('./lib/cards');
-
-
-io.on('connection', function (socket) {
-    // console.log('Connected socket: ' + socket.id);
-    if(!users.length)
+var Game = require('./server/game');
+var game = new Game(io);
+io.use(function(socket, next) {
+    if(!socket.loggedIn)
         socket.emit('redirect');
 
+    next();
+});
+io.on('connection', function (socket) {
+
     socket.on('login', function (name, cb) {
-        var user = {
-            name: name, 
-            hp: 100, 
-            id: this.id, 
-            cards: cards, 
-            cardsPlayed: [], 
-            cardPlayed: {att: 0, def: 0}
-        };
-        this.user = user;
-        var opponent = this.getOpponent();
-        users.push(this.user);
-
-        if(opponent){
-            io.to(opponent.id).emit('turnAvailable');
-        }
-        cb();
+        var player = game.addPlayer({
+            name: name,
+            hp: 100,
+            id: this.id,
+            ip: this.handshake.address,
+            socket: this
+        });
+        this.loggedIn = true;
+        if(game.isFull())
+            game.getOpponent(this.id).socket.emit('turnAvailable');
+        cb(player, game.cards);
     });
 
-    socket.on('getUsers', function (cb) {
-        io.emit('updateUsers', users);
-    });
 
-    socket.on('playCard', function (card) {
-        var user = this.getUser();
-        if(user)
-            user.cardsPlayed.push(card);
-    });
+    socket.on('drawCard', (cb) => game.drawCard(socket.id, cb));
 
-    socket.on('finishTurn', function() {
-        var opponent = this.getOpponent(),
-            user = this.getUser();
+    socket.on('playCard',(card, cb) => game.playCard(socket.id, card, cb));
 
+    socket.on('endTurn', () => game.endTurn(socket.id));
 
-        if(user.cardsPlayed.length)
-            io.to(opponent.id).emit('playCard', user.cardsPlayed);
-
-        if(opponent.cardsPlayed.length)
-            attack();
-
-        io.to(opponent.id).emit('turnAvailable');
-    })
-
-    socket.on('endGame', function () {
+    socket.on('endGame',() => {
         var opponent = this.getOpponent();
         io.to(opponent.id).emit('endGame');
     });
 
-    socket.on('reset', function () {
-        users = [];
+    socket.on('reset', () => {
+        game.clearPlayers();
         io.emit('redirect');
     });
 
-    socket.getOpponent = function(){
-        return users.filter(v => v.id !== this.id)[0];
-    };
 
-    socket.getUser = function () {
-        return users.filter(v => v.id === this.id)[0];
-    };
-
-    socket.on('disconnect', function () {
-        // io.emit('redirect');
-        // users = [];
+    socket.on('disconnect', () => {
+        game.removePlayer(socket.id);
         socket.emit('disconnected');
     });
 
 });
-
-function attack() {
-    var user1 = users[0],
-        user2 = users[1],
-        dam1, dam2;
-
-
-
-    for(var i = 0; i < user1.cardsPlayed.length; i++){
-        user1.cardPlayed.att += user1.cardsPlayed[i].att || 0;
-        user1.cardPlayed.def += user1.cardsPlayed[i].def || 0;
-    }
-    for(var i = 0; i < user2.cardsPlayed.length; i++){
-        user2.cardPlayed.att += user2.cardsPlayed[i].att || 0;
-        user2.cardPlayed.def += user2.cardsPlayed[i].def || 0;
-    }
-
-    if(user1.cardPlayed && user2.cardPlayed){
-        dam1 = (user2.cardPlayed.att - user1.cardPlayed.def);
-        dam2 = (user1.cardPlayed.att - user2.cardPlayed.def);
-
-        if(dam1 > 0)
-            user1.hp -= dam1;
-        if(dam2 > 0)
-            user2.hp -= dam2;
-    }else if(user1.cardPlayed){
-        user2.hp -= user1.cardPlayed.att;
-    }else if(user2.cardPlayed){
-        user1.hp -= user2.cardPlayed.att;
-    }
-
-
-    io.to(user1.id).emit('endRound', user1.hp, user2.hp);
-    io.to(user2.id).emit('endRound', user2.hp, user1.hp);
-
-    user1.cardPlayed = {att: 0, def: 0};
-    user2.cardPlayed = {att: 0, def: 0};
-    user1.cardsPlayed = [];
-    user2.cardsPlayed = [];
-}

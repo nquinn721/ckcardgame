@@ -1,0 +1,15 @@
+<div class="resources">
+    <div class="resource" ng-class="{active: g.game.player.newbrick}"> 
+        <img src="img/brick.png" alt="">
+        {{g.game.player.brick}}
+    </div>
+    <div class="resource" ng-class="{active: g.game.player.newmeat}">
+        <img src="img/meat.png" alt="">
+        {{g.game.player.meat}}
+    </div>
+    <div class="resource" ng-class="{active: g.game.player.newwater}">
+        <img src="img/water.png" alt="">
+        {{g.game.player.water}}
+    </div>
+    <div ng-show="g.game.player.cantPlayCard">Not enough resources!</div>
+</div>

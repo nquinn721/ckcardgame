@@ -1,24 +1,3 @@
-<div class="player main">
-    <div class="profile">
-        <div class="player-info" ng-class="{playerDamaged: g.playerDamaged}">
-            <div class="name">{{g.game.player.name}}</div>
-            <div class="hp">
-                HP: {{g.game.player.hp}}
-                <span class="player-damage" ng-show="g.playerDamaged">- {{g.playerDamaged}}</span>
-            </div>
-        </div>
-
-        <div class="resources">
-            <div class="resource" ng-class="{active: g.game.player.newbrick}">Brick: {{g.game.player.brick}}</div>
-            <div class="resource" ng-class="{active: g.game.player.newmeat}">Meat: {{g.game.player.meat}}</div>
-            <div class="resource" ng-class="{active: g.game.player.newwater}">Water: {{g.game.player.water}}</div>
-        </div>
-        <button class="reset" ng-if="g.game.player.name === 'Nate'" ng-click="g.reset()">Reset</button>
-        <div ng-show="g.game.player.cantPlayCard">Not enough resources!</div>
-    </div>
-
-</div>
-
 <div class="game-area" ng-class="{damaged: g.playerDamaged}">
     <div ng-if="g.disconnected">YOU GOT DISCONNECTED</div>
     <div class="end-game" ng-if="g.game.gameEnded">
@@ -26,90 +5,20 @@
         <div class="win" ng-if="g.game.win">You Win!</div>
     </div>
 
+    <div class="board-bg"></div>
 
     <div class="board" ng-class="{attack: g.attackComing}">
-
-        <div class="opponent player">
-            <div class="profile bg-danger">
-                <div ng-if="!g.game.opponent.name">Waiting for opponent!</div>
-                <div class="name">{{g.game.opponent.name}}</div>
-                <div class="hp">{{g.game.opponent.hp}}</div>
-            </div>
+        <div class="player-area">
+            <player></player>
+            <resources></resources>
+            <opponent></opponent>
         </div>
+        <field></field>
 
-        <div class="playing-field">
-            <div class="players-card">
-                <!-- <card ng-repeat="card in g.game.player.cardsPlayed" card="card"></card> -->
-                <div class="card" ng-repeat="character in g.game.player.cardsPlayed track by $index">
-                    <div class="image">
-                        <img ng-src="img/{{character.name.toLowerCase()}}.png" alt="">
-                    </div>
-                    <div class="name">{{character.name}}</div>
-                    <div class="stats">
-                        <div ng-if="character.att">Attack: <span>{{character.att}}</span></div>
-                        <div>Defense <span>{{character.def}}</span></div>
-                    </div>
-                    <div class="resources-needed" ng-if="character.resourcesNeeded">
-                        <div>Resourced Needed</div>
-                        <div ng-repeat="(resource, cost) in character.resourcesNeeded">
-                            {{resource.substr(0,1).toUpperCase() + resource.substr(1)}}:
-                            <span>{{cost}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="draw-cards"> 
-                <div class="draw-card" ng-class="{active: (g.turnAvailable && !g.drawnCard), finish: (g.turnAvailable && g.drawnCard)}" >
-                    <span ng-show="g.turnAvailable && !g.drawnCard">Draw a card!</span>
-                    <span ng-show="g.turnAvailable && g.drawnCard">Finish Turn!</span>
-                </div>
-                <img src="https://nunoo101.files.wordpress.com/2014/10/playing-card12.jpg" alt="" ng-click="g.drawCard()" >
-                <div class="show-drawn-card">
-                    <card ng-show="g.game.player.drawnCard" card="g.game.player.drawnCard">
-                </div>
-            </div>
-            <div class="opponents-card">
-                <!-- <card ng-show="g.game.opponent.playedCard" card="g.game.opponent.playedCard"></card> -->
-                <div class="card" ng-repeat="character in g.game.opponent.cardsPlayed track by $index">
-                    <div class="image">
-                        <img ng-src="img/{{character.name.toLowerCase()}}.png" alt="">
-                    </div>
-                    <div class="name">{{character.name}}</div>
-                    <div class="stats">
-                        <div ng-if="character.att">Attack: <span>{{character.att}}</span></div>
-                        <div>Defense <span>{{character.def}}</span></div>
-                    </div>
-                    <div class="resources-needed" ng-if="character.resourcesNeeded">
-                        <div>Resourced Needed</div>
-                        <div ng-repeat="(resource, cost) in character.resourcesNeeded">
-                            {{resource.substr(0,1).toUpperCase() + resource.substr(1)}}:
-                            <span>{{cost}}</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
         <div class="players-cards">
-            <div class="card" ng-show="character.length" ng-repeat="character in g.game.player.characters" ng-click="g.playCard(character[0])">
-                <div class="total">{{character.length}}</div>
-                <div class="image">
-                    <img ng-src="img/{{character[0].name.toLowerCase()}}.png" alt="">
-                </div>
-                <div class="name">{{character[0].name}}</div>
-                <div class="stats">
-                    <div ng-if="character[0].att">Attack: <span>{{character[0].att}}</span></div>
-                    <div>Defense <span>{{character[0].def}}</span></div>
-                </div>
-                <div class="resources-needed" ng-if="character[0].resourcesNeeded">
-                    <div>Resourced Needed</div>
-                    <div ng-repeat="(resource, cost) in character[0].resourcesNeeded">
-                        {{resource.substr(0,1).toUpperCase() + resource.substr(1)}}:
-                        <span>{{cost}}</span>
-                    </div>
-                </div>
-            </div>
+            <card ng-repeat="creature in g.game.player.creature track by $index" card="creature[0]" ng-click="g.playCard(creature[0])"></card>
+            <card ng-repeat="defense in g.game.player.defense track by $index" card="defense[0]" ng-click="g.playCard(defense[0])"></card>
+            
         </div>
 
 
