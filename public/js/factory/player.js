@@ -54,7 +54,6 @@ app.factory('Player', function (Card, $timeout) {
         update: function(userObj) {
             this.totalAttack = 0;
             this.totalDefense = 0;
-            // this.hasPlayedCards = false;           
             
 
             var self = this;
@@ -66,7 +65,6 @@ app.factory('Player', function (Card, $timeout) {
             for(var i in this.playedCards){
                 this.totalAttack += this.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
                 this.totalDefense += this.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
-                // this.hasPlayedCards = true;
             }
 
             $timeout(function() {

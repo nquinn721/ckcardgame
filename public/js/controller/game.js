@@ -6,7 +6,7 @@ app.controller('game', function (game, socket, $location, $timeout) {
 
     this.game.setupController(this);
 
-    if(this.game.player && this.game.player.name.match(/admin|nate/i)){
+    if(this.game.player && this.game.player.name.match(/admin/i)){
         this.isadmin = true;
     }
 
@@ -19,7 +19,6 @@ app.controller('game', function (game, socket, $location, $timeout) {
     };
 
     this.drawCard = function () {
-        this.attackComing = false;
         if(this.turnAvailable && !this.drawnCard){
             socket.emit('drawCard', (card) => this.game.player.drawCard(card, this.isadmin));
             this.drawnCard = true;
