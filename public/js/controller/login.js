@@ -2,7 +2,7 @@ app.controller('login', function (socket, $location, game) {
     var self = this;
 
     // autologin
-    var autologin = true;
+    var autologin = false;
 
 
     this.name;
