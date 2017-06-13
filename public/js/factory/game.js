@@ -1,5 +1,5 @@
 
-app.factory('game', function (Player) {
+app.factory('game', function (Player, $timeout) {
     function Game() {
         this.cards;
     }
@@ -8,6 +8,26 @@ app.factory('game', function (Player) {
         init: function(playerObj, cards) {
             this.cards = cards;
             this.createPlayer(playerObj);
+        },
+        setupController: function(controller) {
+            this.controller = controller;
+        },
+        turnAvailable: function (opponent) {
+            if(opponent)
+                this.updateOpponent(opponent);
+            this.controller.turnAvailable = true;
+
+            if(this.controller.autoplay){
+                this.controller.drawCard();
+                this.controller.drawCard();
+            }
+            
+        },
+        finishAttack: function(players) {
+            var self = this;
+            $timeout(function(){
+                self.updatePlayers(players);
+            }.bind(this), 2000);  
         },
         createPlayer: function (playerObj) {
             this.player = new Player(playerObj);
@@ -18,8 +38,9 @@ app.factory('game', function (Player) {
             this.opponent.type = 'opponent';
         },
         updatePlayers: function(players) {
+            console.log(players);
             for(var i = 0; i < players.length; i++){
-                if(players[i].name === this.player.name)this.player.update(players[i]);
+                if(players[i].id === this.player.id)this.player.update(players[i]);
                 else this.opponent.update(players[i]);
             }
         },
@@ -27,13 +48,8 @@ app.factory('game', function (Player) {
             this.player.update(player);
         },
         updateOpponent: function(opponent) {
-            this.opponent.update(opponent);
-        },
-        clearPlayedCards: function() {
-            $timeout(function() {
-                this.player.hideCards();
-                this.opponent.hideCards();  
-            }.bind(this), 3000);
+            if(this.opponent)
+                this.opponent.update(opponent);
         },
         getCard: function(id) {
             var card;

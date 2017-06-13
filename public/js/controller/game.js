@@ -1,8 +1,10 @@
-app.controller('game', function (socket, game, $location, $timeout) {
+app.controller('game', function (game, socket, $location, $timeout) {
     var self = this;
     this.isadmin = false;
     this.autoplay = false;
     this.game = game;
+
+    this.game.setupController(this);
 
     if(this.game.player && this.game.player.name.match(/admin|nate/i)){
         this.isadmin = true;
@@ -36,34 +38,9 @@ app.controller('game', function (socket, game, $location, $timeout) {
         socket.emit('reset');  
     };
 
-    socket.on('updatePlayers', v => this.game.updatePlayers(v));
-    socket.on('updatePlayer', v => this.game.updatePlayer(v));
-    socket.on('updateOpponent', v => this.game.updateOpponent(v));
-    socket.on('clearPlayedCards', v => this.game.clearPlayedCards());
 
-    socket.on('turnAvailable', function (opponent) {
-        if(opponent)
-            self.game.updateOpponent(opponent);
-        if(opponent && opponent.playedCards.length){
-            self.attackComing = true;
-        }else{
-            self.attackComing = false;
-        }
-        self.turnAvailable = true;
 
-        if(self.autoplay){
-            self.drawCard();
-            self.drawCard();
-        }
-    });
+    
 
-    socket.on('endGame', this.game.end);
-
-    socket.on('redirect', function () {
-        $location.path('/');
-    });
-
-    socket.on('disconnected', function () {
-        self.disconnected = true;
-    });
+    
 });

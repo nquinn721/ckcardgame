@@ -4,7 +4,7 @@ app.controller('login', function (socket, $location, game) {
     // autologin
     var autologin = true;
 
-    
+    console.log('login');
 
     this.name;
 

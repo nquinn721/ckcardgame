@@ -10,15 +10,15 @@
     </div>
 
     <div class="board-bg"></div>
-    <div ng-class="{attack: g.game.player.playedCards.length || g.game.opponent.playedCards.length}"></div>
+    <div ng-class="{attack: g.game.player.hasPlayedCards || g.game.opponent.hasPlayedCards}"></div>
 
     <div class="board">
         <div class="player-area">
             <player player="g.game.player"></player>
-            <resources></resources>
+            <resources g="g"></resources>
             <player player="g.game.opponent"></player>
         </div>
-        <field></field>
+        <field g="g"></field>
 
         <div class="players-cards">
             <card ng-repeat="creature in g.game.player.creature track by $index" ng-show="creature.length" card="creature[0]" total="creature.length" ng-click="g.playCard(creature[0])"></card>

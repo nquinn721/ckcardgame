@@ -17,9 +17,6 @@ app.factory('Player', function (Card, $timeout) {
     }
 
     Player.prototype = {
-        hideCards: function() {
-            this.playedCards = null;            
-        },
         showCantPlayCard: function () {
             var self = this;
             this.cantPlayCard = true;
@@ -55,20 +52,23 @@ app.factory('Player', function (Card, $timeout) {
         },
 
         update: function(userObj) {
+            this.totalAttack = 0;
+            this.totalDefense = 0;
+            // this.hasPlayedCards = false;           
+            
+
             var self = this;
             if(userObj.hp < this.hp)
                 this.showDamage = this.hp - userObj.hp;
             for(var i in userObj)
                 this[i] = userObj[i];
 
-            if(this.playedCards){
-                for(var i in this.playedCards){
-                    this.totalAttack = this.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
-                    this.totalDefense = this.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
-                }
+            for(var i in this.playedCards){
+                this.totalAttack += this.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
+                this.totalDefense += this.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
+                // this.hasPlayedCards = true;
             }
 
-            console.log(this);
             $timeout(function() {
                 self.showDamage = false;
             }, 3000)

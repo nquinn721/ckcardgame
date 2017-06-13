@@ -67,10 +67,9 @@ Game.prototype = {
 		opponent.turnAvailable = true;
 		opponent.socket.emit('turnAvailable', player.client());
 
-		if(opponent.playedCards.length){
+		if(opponent.hasPlayedCards){
 			this.calculateDamage();
-			this.endAttack();
-			this.io.emit('clearPlayedCards');
+			this.io.emit('finishAttack', [this.player1.client(), this.player2.client()]);
 		}
 	},
 	// End Turn
@@ -104,13 +103,13 @@ Game.prototype = {
 	        dam1, dam2;
 
 
-	    for(var i = 0; i < player1.playedCards.length; i++){
-	        player1.playedCard.att += player1.playedCards[i].att || 0;
-	        player1.playedCard.def += player1.playedCards[i].def || 0;
+	    for(var i in player1.playedCards){
+	        player1.playedCard.att += player1.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
+	        player1.playedCard.def += player1.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
 	    }
-	    for(var i = 0; i < player2.playedCards.length; i++){
-	        player2.playedCard.att += player2.playedCards[i].att || 0;
-	        player2.playedCard.def += player2.playedCards[i].def || 0;
+	    for(var i in player2.playedCards){
+	        player2.playedCard.att += player2.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
+	        player2.playedCard.def += player2.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
 	    }
 
 	    if(player1.playedCard && player2.playedCard){
@@ -126,16 +125,15 @@ Game.prototype = {
 	    }else if(player2.playedCard){
 	        player1.hp -= player2.playedCard.att;
 	    }
+	    console.log('player1', player1.hp, 'player2', player2.hp);
 
-	},
-	endAttack: function() {
-		var player1 = this.player1,
-			player2 = this.player2;
-
-		player1.playedCard = {att: 0, def: 0};
+	    player1.playedCard = {att: 0, def: 0};
 	    player2.playedCard = {att: 0, def: 0};
-	    player1.playedCards = [];
-	    player2.playedCards = [];
+	    player1.playedCards = {};
+	    player2.playedCards = {};
+	    player1.hasPlayedCards = false;
+	    player2.hasPlayedCards = false;
+
 	}
 }
 

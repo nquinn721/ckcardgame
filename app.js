@@ -40,8 +40,9 @@ io.on('connection', function (socket) {
             socket: this
         });
         this.loggedIn = true;
-        if(game.isFull())
+        if(game.isFull()){
             game.getOpponent(this.id).socket.emit('turnAvailable');
+        }
         cb(player, game.cards);
     });
 

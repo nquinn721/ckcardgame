@@ -43,9 +43,11 @@ Player.prototype = {
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
 
-            if(!this.playedCards[card.type])
-            	this.playedCards[card.type] = [];
-            this.playedCards[card.type].push(card);
+            if(!this.playedCards[card.id])
+            	this.playedCards[card.id] = [];
+            this.playedCards[card.id].push(card);
+
+            this.hasPlayedCards = true;
             
             for(var i in this[card.type])
                 if(this[card.type][i].length && this[card.type][i][0].id === card.id)this[card.type][i].pop();
@@ -62,7 +64,6 @@ Player.prototype = {
 		return Object.keys(this[type]).map(v => ({name: v, total: this[type][v].length}));
 	},
 	updateClient: function() {
-		// console.log(this.client());
 		this.socket.emit('updatePlayer', this.client());	
 	},
 	createOpponent: function(opponent) {
@@ -78,7 +79,8 @@ Player.prototype = {
 			meat: this.meat,
 			water: this.water,
 			brick: this.brick,
-			playedCards: this.playedCards
+			playedCards: this.playedCards,
+			hasPlayedCards: this.hasPlayedCards
 		}
 	}
 }
