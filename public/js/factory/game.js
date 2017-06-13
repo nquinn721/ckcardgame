@@ -12,7 +12,6 @@ app.factory('game', function (Player) {
         createPlayer: function (playerObj) {
             this.player = new Player(playerObj);
             this.player.type = 'player';
-            console.log(this.player);
         },
         createOpponent: function(opponent) {
             this.opponent = new Player(opponent);
@@ -34,7 +33,7 @@ app.factory('game', function (Player) {
             $timeout(function() {
                 this.player.hideCards();
                 this.opponent.hideCards();  
-            }, 2000);
+            }.bind(this), 3000);
         },
         getCard: function(id) {
             var card;

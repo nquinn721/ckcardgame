@@ -1,6 +1,11 @@
 app.controller('login', function (socket, $location, game) {
     var self = this;
 
+    // autologin
+    var autologin = true;
+
+    
+
     this.name;
 
     this.login = function () {
@@ -12,5 +17,11 @@ app.controller('login', function (socket, $location, game) {
     };
 
     socket.on('createOpponent', v => game.createOpponent(v));
+
+
+    if(autologin){
+        this.name = 'Nate';
+        this.login();   
+    }
 
 });

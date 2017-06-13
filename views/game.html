@@ -10,7 +10,7 @@
     </div>
 
     <div class="board-bg"></div>
-    <div ng-class="{attack: g.attackComing}"></div>
+    <div ng-class="{attack: g.game.player.playedCards.length || g.game.opponent.playedCards.length}"></div>
 
     <div class="board">
         <div class="player-area">

@@ -65,10 +65,11 @@ Game.prototype = {
 		
 		player.turnAvailable = false;
 		opponent.turnAvailable = true;
-		opponent.socket.emit('turnAvailable', player.playedCards);
+		opponent.socket.emit('turnAvailable', player.client());
 
 		if(opponent.playedCards.length){
 			this.calculateDamage();
+			this.endAttack();
 			this.io.emit('clearPlayedCards');
 		}
 	},
@@ -82,10 +83,10 @@ Game.prototype = {
 		if(this.player2)this.player2.updateClient();	
 	},
 	getOpponent: function(id) {
-		return this.player1.id === id ? this.player2 : this.player1;
+		return this.player1 && this.player1.id === id ? this.player2 : this.player1;
 	},
 	getPlayer: function(id) {
-		return this.player1.id === id ? this.player1 : this.player2;
+		return this.player1 && this.player1.id === id ? this.player1 : this.player2;
 	},
 	getPlayerClients: function() {
 		var Players = [];
@@ -103,8 +104,6 @@ Game.prototype = {
 	        dam1, dam2;
 
 
-	        // console.log('player1', player1.playedCards);
-        	// console.log('player2', player2.playedCards);
 	    for(var i = 0; i < player1.playedCards.length; i++){
 	        player1.playedCard.att += player1.playedCards[i].att || 0;
 	        player1.playedCard.def += player1.playedCards[i].def || 0;
@@ -127,14 +126,16 @@ Game.prototype = {
 	    }else if(player2.playedCard){
 	        player1.hp -= player2.playedCard.att;
 	    }
-	    // console.log('pl1', player1.hp);
-	    // console.log('pl2', player2.hp);
-	    player1.playedCard = {att: 0, def: 0};
+
+	},
+	endAttack: function() {
+		var player1 = this.player1,
+			player2 = this.player2;
+
+		player1.playedCard = {att: 0, def: 0};
 	    player2.playedCard = {att: 0, def: 0};
 	    player1.playedCards = [];
 	    player2.playedCards = [];
-		this.io.emit('updatePlayers', [player1.client(), player2.client()]);
-
 	}
 }
 

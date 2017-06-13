@@ -1,7 +1,7 @@
 app.directive('resources', function() {
 	return {
 		restrict: 'E',
-		templateUrl: 'resources.html',
+		templateUrl: 'partials/resources.html',
 		controller: 'game',
 		controllerAs: 'g',
 		replace: true,

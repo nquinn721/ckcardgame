@@ -8,7 +8,7 @@ function Player(playerObj) {
 	this.brick = 0;
 	this.creature = {};
 	this.defense  = {};
-	this.playedCards = [];
+	this.playedCards = {};
 	this.playedCard = {att: 0, def: 0};
 
 	this.socket = playerObj.socket;
@@ -43,10 +43,12 @@ Player.prototype = {
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
 
-            this.playedCards.push(card);
+            if(!this.playedCards[card.type])
+            	this.playedCards[card.type] = [];
+            this.playedCards[card.type].push(card);
             
             for(var i in this[card.type])
-                if(this[card.type][i][0].id === card.id)this[card.type][i].pop();
+                if(this[card.type][i].length && this[card.type][i][0].id === card.id)this[card.type][i].pop();
 
 
         	this.updateClient();

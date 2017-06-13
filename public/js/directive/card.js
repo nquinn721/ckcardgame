@@ -1,7 +1,7 @@
 app.directive('card', function () {
 	return {
 		restrict: 'E',
-		templateUrl: 'card.html',
+		templateUrl: 'partials/card.html',
 		replace: true,
 		scope: {
 			card: '=',

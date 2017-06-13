@@ -4,9 +4,10 @@ app.controller('game', function (socket, game, $location, $timeout) {
     this.autoplay = false;
     this.game = game;
 
-    // if(this.game.player.name.match(/admin|nate/i)){
-    //     this.isadmin = true;
-    // }
+    if(this.game.player && this.game.player.name.match(/admin|nate/i)){
+        this.isadmin = true;
+    }
+
 
     this.playCard = function (card) {
         if(this.turnAvailable){
@@ -18,7 +19,7 @@ app.controller('game', function (socket, game, $location, $timeout) {
     this.drawCard = function () {
         this.attackComing = false;
         if(this.turnAvailable && !this.drawnCard){
-            socket.emit('drawCard', (card) => this.game.player.drawCard(card));
+            socket.emit('drawCard', (card) => this.game.player.drawCard(card, this.isadmin));
             this.drawnCard = true;
         }else{
             this.turnAvailable = false;
@@ -40,9 +41,10 @@ app.controller('game', function (socket, game, $location, $timeout) {
     socket.on('updateOpponent', v => this.game.updateOpponent(v));
     socket.on('clearPlayedCards', v => this.game.clearPlayedCards());
 
-    socket.on('turnAvailable', function (opponentsPlayedCards) {
-        if(opponentsPlayedCards && opponentsPlayedCards.length){
-            self.game.opponent.showCards(opponentsPlayedCards);
+    socket.on('turnAvailable', function (opponent) {
+        if(opponent)
+            self.game.updateOpponent(opponent);
+        if(opponent && opponent.playedCards.length){
             self.attackComing = true;
         }else{
             self.attackComing = false;

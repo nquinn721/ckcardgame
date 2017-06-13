@@ -7,19 +7,18 @@ app.factory('Player', function (Card, $timeout) {
         this.cards = [];
         this.creature = {};
         this.defense = {};
-        this.playedCards = [];
         this.brick = 0;
         this.meat = 0;
         this.water = 0;
 
+        this.totalAttack = 0;
+        this.totalDefense = 0;
+
     }
 
     Player.prototype = {
-        showCards: function(cards){
-            this.playedCards = cards;
-        },
         hideCards: function() {
-            this.playedCards = null;
+            this.playedCards = null;            
         },
         showCantPlayCard: function () {
             var self = this;
@@ -29,7 +28,7 @@ app.factory('Player', function (Card, $timeout) {
             }, 2000);
 
         },
-        drawCard: function (card) {
+        drawCard: function (card, dontshowcard) {
             var self = this;
             if(!card)return;
 
@@ -50,9 +49,8 @@ app.factory('Player', function (Card, $timeout) {
                         }
                         self[card.type][card.id].push(card);
                     }
-                    console.log(self.creature, self.defense);
                 }
-            }.bind(this),800);
+            }.bind(this), dontshowcard ? 10 : 800);
 
         },
 
@@ -63,6 +61,14 @@ app.factory('Player', function (Card, $timeout) {
             for(var i in userObj)
                 this[i] = userObj[i];
 
+            if(this.playedCards){
+                for(var i in this.playedCards){
+                    this.totalAttack = this.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
+                    this.totalDefense = this.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
+                }
+            }
+
+            console.log(this);
             $timeout(function() {
                 self.showDamage = false;
             }, 3000)
