@@ -3,8 +3,5 @@ app.directive('field', function() {
 		restrict: 'E',
 		templateUrl: 'partials/field.html',
 		replace: true,
-		scope: {
-			g: '='
-		}
 	}
 });

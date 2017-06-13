@@ -10,16 +10,18 @@
         <button ng-click="g.replay()">Replay</button>
     </div>
 
+    <trade ng-if="g.game.showTrade"></trade>
+
     <div class="board-bg"></div>
     <div ng-class="{attack: g.game.player.hasPlayedCards || g.game.opponent.hasPlayedCards}"></div>
 
     <div class="board">
         <div class="player-area">
-            <player player="g.game.player"></player>
-            <resources g="g"></resources>
-            <player player="g.game.opponent"></player>
+            <player g="g" player="g.game.player"></player>
+            <resources></resources>
+            <player g="g" player="g.game.opponent"></player>
         </div>
-        <field g="g"></field>
+        <field></field>
         
         <div class="footer">
             <chat></chat>

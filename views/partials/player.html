@@ -5,7 +5,7 @@
             HP: {{player.hp}}
             <span class="enemy-damage" ng-show="player.showDamage">- {{player.showDamage}}</span>
         </div>
-        
+        <button class="profile-trade-button" ng-click="g.game.showTrade = true">Trade</button>
     </div>
     <div class="profile" ng-if="!player.name">Waiting for opponent!</div>
 </div>

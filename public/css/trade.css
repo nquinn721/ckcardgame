@@ -1,0 +1,78 @@
+.trade {
+    position: absolute;
+    z-index: 1000;
+    background: #222;
+    width: 50%;
+    height: 50%;
+    left: 25%;
+    top: 25%;
+    box-shadow: 0 0 27px 10px black;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.trade .trade-resources {
+    height: 25%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-around;
+}
+
+.trade .trade-resources img {
+    width: 25%;
+}
+
+.trade .trade-resources > div {
+    display: flex;
+    flex-direction: column;
+    background: #121212;
+    height: 100%;
+    align-items: center;
+    justify-content: space-around;
+    margin: 5px;
+}
+
+.trade .trade-resources {
+    height: 25%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-around;
+}
+
+
+.trade .trade-resources button {
+    background: #444;
+    border: none;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    width: 85%;
+}
+.trade .close {
+    cursor: pointer;
+    position: absolute;
+    top: -14px;
+    right: -16px;
+    background: #111;
+    padding: 10px 14px;
+    border-radius: 100%;
+    font-size: 14px;
+    color: #bf3a3a;
+}
+
+.trade .trade-cards {
+    height: 51%;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.trade .cards-to-trade > div {
+    float: left;
+    width: 6vw;
+    margin: 5px;
+    height: 89px;
+}

@@ -59,6 +59,12 @@ Player.prototype = {
         }
 
 	},
+	hasCard: function(card) {
+		return this[card.type][card.id].length;
+	},
+	removeCard: function(card) {
+		this[card.type][card.id].pop();
+	},
 	// [{name: 'T-Rex', total: 10}, {name: 'Pteradactol', total 3}]
 	getList: function (type) {
 		return Object.keys(this[type]).map(v => ({name: v, total: this[type][v].length}));

@@ -5,6 +5,7 @@ app.directive('player', function() {
 		replace: true,
 		scope: {
 			player: '=',
+			g: '='
 		}
 	}
 });

@@ -1,0 +1,33 @@
+<div class="trade">
+	<h3>
+		Trade
+		<div class="close" ng-click="g.game.showTrade = false">X</div>
+	</h3>
+	<div class="not-enough" ng-show="trade.notEnoughResources">You don't have enough resources!</div>
+	<div class="trade-resources">
+		<div class="meat">
+			<img src="img/meat.png" alt="">
+			<button ng-click="trade.tradeResource('meat')">Trade 4x</button>
+		</div>
+		<div class="water">
+			<img src="img/water.png" alt="">
+			<button ng-click="trade.tradeResource('water')">Trade 4x</button>
+		</div>
+		<div class="meat">
+			<img src="img/brick.png" alt="">
+			<button ng-click="trade.tradeResource('brick')">Trade 4x</button>
+		</div>
+
+		<div class="purchase pointer">
+			<span>Buy</span>
+			1x <img ng-src="img/{{trade.currentResourcePurchase}}.png" alt="" ng-click="trade.changePurchaseResource()">
+		</div>
+	</div>
+	<div class="trade-cards">
+		Card trade (1x each resource for cost of card)
+		<div class="cards-to-trade">
+			<card ng-repeat="card in g.game.player.creature" ng-show="card.length" card="card[0]" total="card.length" trade="trade.sellCard"></card>
+			<card ng-repeat="card in g.game.player.defense" ng-show="card.length" card="card[0]" total="card.length" trade="trade.sellCard"></card>
+		</div>
+	</div>
+</div>

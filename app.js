@@ -53,6 +53,8 @@ io.on('connection', function (socket) {
     socket.on('drawCard', (cb) => game.drawCard(socket.id, cb));
     socket.on('playCard',(card, cb) => game.playCard(socket.id, card, cb));
     socket.on('endTurn', () => game.endTurn(socket.id));
+    socket.on('tradeResource', (a, b, cb) => game.tradeResource(socket.id, a, b, cb));
+    socket.on('tradeCard', (a, cb) => game.tradeCard(socket.id, a, cb));
     socket.on('replay',() => game.replay());
 
 

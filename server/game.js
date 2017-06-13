@@ -55,8 +55,33 @@ Game.prototype = {
 		if(player.turnAvailable){}
 
 	},
-	tradeCardForResources: function() {
-		
+	tradeResource: function(id, resource, getResource, cb) {
+		var player = this.getPlayer(id);
+
+		if(!player)return;
+
+		if(player[resource] >= 4){
+			player[resource] -= 4;
+			player[getResource]++
+			player.updateClient();
+		}else{
+			cb();
+		}
+
+	},
+	tradeCard: function(id, card, cb) {
+		var player = this.getPlayer(id);
+
+		if(!player)return;
+
+		if(player.hasCard(card)){
+			for(var i in card.resourcesNeeded)
+				player[i]++;
+			player.removeCard(card);
+			player.updateClient();
+		}else{
+			cb();
+		}
 	},
 	endTurn: function(id) {
 		var player = this.getPlayer(id),

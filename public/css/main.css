@@ -6,26 +6,19 @@ html, body {
     background-size:100% 100%;
     color:white;
 }
+c {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+}
+.pointer{
+    cursor: pointer;
+}
 .navbar-inverse{
     border-radius:0;
-}
-.player {
-    background: #6b3636;
-    width: 25%;
-    padding: 20px;
-    box-sizing: border-box;
-    height: 100%;
-    color:white;
-}
-.player .profile{
-    width: 100%;
-    color:white;
-}
-.profile .name {
-    font-size: 30px;
-}
-.opponent.player {
-    text-align: right;
 }
 
 .resources {
@@ -137,7 +130,7 @@ html, body {
 
 
 .playing-field {
-    height: 57%;
+    height: 60%;
     display: flex;
     align-items: center;
 }
@@ -260,7 +253,7 @@ form.login-box div {
     display: flex;
     align-items: center;
     height: 25%;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 

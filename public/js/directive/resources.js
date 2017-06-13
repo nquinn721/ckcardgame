@@ -3,8 +3,5 @@ app.directive('resources', function() {
 		restrict: 'E',
 		templateUrl: 'partials/resources.html',
 		replace: true,
-		scope:{
-			g: '='
-		}
 	}
 });

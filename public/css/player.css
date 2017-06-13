@@ -1,0 +1,29 @@
+.player {
+    background: #6b3636;
+    width: 25%;
+    padding: 20px;
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    color:white;
+}
+.player .profile{
+    width: 100%;
+    color:white;
+}
+.profile .name {
+    font-size: 30px;
+}
+.opponent.player {
+    text-align: right;
+}
+.player .profile-trade-button {
+    position: absolute;
+    right: 5px;
+    background: #6b0e0e;
+    border: none;
+    color: white;
+    padding: 7px 14px;
+    bottom: 5px;
+    cursor: pointer;
+}

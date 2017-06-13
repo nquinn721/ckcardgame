@@ -5,7 +5,8 @@ app.directive('card', function () {
 		replace: true,
 		scope: {
 			card: '=',
-			total: '='
+			total: '=',
+			trade: '='
 		}
 	}
 })
