@@ -1,0 +1,30 @@
+.chat {
+    height: 100%;
+    display: flex;
+    padding: 5px;
+    background: rgba(0,0,0,0.4);
+    float: left;
+    box-sizing:border-box;
+    color:white;
+    flex-direction: column;
+}
+
+.chat .message-area {
+    padding:5px;
+    overflow-y: auto;
+    flex-grow: 3;
+}
+
+.chat .message [type=text] {
+    background: rgba(107, 36, 36, 0.52);
+    border: 1px solid black;
+    padding: 5px;
+    color: white;
+}
+
+.chat .message [type=submit] {
+    border: 1px solid black;
+    background: #863636;
+    color: white;
+    padding: 4px 10px;
+}

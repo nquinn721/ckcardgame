@@ -4,7 +4,6 @@ app.controller('login', function (socket, $location, game) {
     // autologin
     var autologin = false;
 
-    console.log('login');
 
     this.name;
 
@@ -20,7 +19,7 @@ app.controller('login', function (socket, $location, game) {
 
 
     if(autologin){
-        this.name = 'Nate';
+        this.name = 'Admin';
         this.login();   
     }
 

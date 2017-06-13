@@ -7,6 +7,7 @@
     <div class="end-game" ng-if="g.game.gameEnded">
         <div class="lose" ng-if="g.game.lose">You Lose!</div>
         <div class="win" ng-if="g.game.win">You Win!</div>
+        <button ng-click="g.replay()">Replay</button>
     </div>
 
     <div class="board-bg"></div>
@@ -19,12 +20,16 @@
             <player player="g.game.opponent"></player>
         </div>
         <field g="g"></field>
-
-        <div class="players-cards">
-            <card ng-repeat="creature in g.game.player.creature track by $index" ng-show="creature.length" card="creature[0]" total="creature.length" ng-click="g.playCard(creature[0])"></card>
-            <card ng-repeat="defense in g.game.player.defense track by $index" ng-show="defense.length" card="defense[0]" total="defense.length" ng-click="g.playCard(defense[0])"></card>
-            
+        
+        <div class="footer">
+            <chat></chat>
+            <div class="players-cards">
+                <card ng-repeat="creature in g.game.player.creature track by $index" ng-show="creature.length" card="creature[0]" total="creature.length" ng-click="g.playCard(creature[0])"></card>
+                <card ng-repeat="defense in g.game.player.defense track by $index" ng-show="defense.length" card="defense[0]" total="defense.length" ng-click="g.playCard(defense[0])"></card>
+                
+            </div>    
         </div>
+        
 
 
     </div>

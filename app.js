@@ -22,7 +22,9 @@ app.get('/', function (req, res) {
 
 
 var Game = require('./server/game');
+var Chat = require('./server/chat');
 var game = new Game(io);
+var chat = new Chat(io);
 io.use(function(socket, next) {
     if(!socket.loggedIn)
         socket.emit('redirect');
@@ -43,25 +45,16 @@ io.on('connection', function (socket) {
         if(game.isFull()){
             game.getOpponent(this.id).socket.emit('turnAvailable');
         }
+        chat.init(socket);
         cb(player, game.cards);
     });
 
 
     socket.on('drawCard', (cb) => game.drawCard(socket.id, cb));
-
     socket.on('playCard',(card, cb) => game.playCard(socket.id, card, cb));
-
     socket.on('endTurn', () => game.endTurn(socket.id));
+    socket.on('replay',() => game.replay());
 
-    socket.on('endGame',() => {
-        var opponent = this.getOpponent();
-        io.to(opponent.id).emit('endGame');
-    });
-
-    socket.on('reset', () => {
-        game.clearPlayers();
-        io.emit('redirect');
-    });
 
 
     socket.on('disconnect', () => {

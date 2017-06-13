@@ -53,7 +53,7 @@ html, body {
     justify-content: center;
     display: flex;
     color: white;
-    z-index:1;
+    z-index:100;
 }
 .lose, .win{
     width:50%;
@@ -255,5 +255,13 @@ form.login-box div {
 .players-cards div {
     margin: 5px;
 }
+
+.footer {
+    display: flex;
+    align-items: center;
+    height: 25%;
+    justify-content: center;
+}
+
 
 

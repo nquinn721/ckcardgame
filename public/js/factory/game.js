@@ -51,11 +51,19 @@ app.factory('game', function (Player, $timeout) {
             if(this.opponent)
                 this.opponent.update(opponent);
         },
+        replay: function(players) {
+            this.gameEnded = false;
+            this.updatePlayers(players);  
+        },
         getCard: function(id) {
             var card;
             for(var i = 0; i < this.cards.length; i++)
                 if(this.cards[i].id == id)card = this.cards[i];
             return card;
+        },
+        getPlayer: function(id) {
+            if(this.player.id === id)return this.player;
+            else return this.opponent;
         },
         end: function (lose) {
             if(lose){
@@ -65,6 +73,7 @@ app.factory('game', function (Player, $timeout) {
             }
 
             this.gameEnded = true;
+
         }
     };
 

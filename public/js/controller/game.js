@@ -32,6 +32,13 @@ app.controller('game', function (game, socket, $location, $timeout) {
     this.pause = function() {
         this.autoplay = !this.autoplay;
     }
+    this.replay = function() {
+        socket.emit('replay');
+    }
+
+    this.leave = function() {
+        $location.path('/');
+    }
 
     this.reset = function() {
         socket.emit('reset');  

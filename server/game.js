@@ -69,7 +69,12 @@ Game.prototype = {
 
 		if(opponent.hasPlayedCards){
 			this.calculateDamage();
-			this.io.emit('finishAttack', [this.player1.client(), this.player2.client()]);
+			if(this.player1.hp <= 0 || this.player2.hp <= 0){
+				this.player1.socket.emit('endGame', 'win');
+				this.player2.socket.emit('endGame');
+			}else{
+				this.io.emit('finishAttack', [this.player1.client(), this.player2.client()]);
+			}
 		}
 	},
 	// End Turn
@@ -93,6 +98,11 @@ Game.prototype = {
 		if(this.player2)Players.push(this.player2.client());
 		return Players;	
 	},
+	replay: function() {
+		this.player1.reset();
+		this.player2.reset();
+		this.io.emit('replay', [this.player1.client(), this.player2.client()]);
+	},
 	clearPlayers: function() {
 		this.player1 = null;
 		this.player2 = null;
@@ -104,12 +114,12 @@ Game.prototype = {
 
 
 	    for(var i in player1.playedCards){
-	        player1.playedCard.att += player1.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
-	        player1.playedCard.def += player1.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
+	        player1.playedCard.att += player1.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
+	        player1.playedCard.def += player1.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
 	    }
 	    for(var i in player2.playedCards){
-	        player2.playedCard.att += player2.playedCards[i].map(function(v){return v.att || 0}).reduce(function(a,b){return a + b});
-	        player2.playedCard.def += player2.playedCards[i].map(function(v){return v.def || 0}).reduce(function(a,b){return a + b});
+	        player2.playedCard.att += player2.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
+	        player2.playedCard.def += player2.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
 	    }
 
 	    if(player1.playedCard && player2.playedCard){
@@ -125,7 +135,6 @@ Game.prototype = {
 	    }else if(player2.playedCard){
 	        player1.hp -= player2.playedCard.att;
 	    }
-	    console.log('player1', player1.hp, 'player2', player2.hp);
 
 	    player1.playedCard = {att: 0, def: 0};
 	    player2.playedCard = {att: 0, def: 0};
