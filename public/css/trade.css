@@ -38,7 +38,7 @@
     height: 25%;
     overflow: hidden;
     display: flex;
-    align-items: center;
+    align-items: center; 
     margin-bottom: 10px;
     justify-content: space-around;
 }
@@ -74,5 +74,5 @@
     float: left;
     width: 6vw;
     margin: 5px;
-    height: 89px;
+    height: 14vh;
 }
