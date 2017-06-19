@@ -7,15 +7,15 @@
 	<div class="trade-resources">
 		<div class="meat">
 			<img src="img/meat.png" alt="">
-			<button ng-click="trade.tradeResource('meat')">Trade 4x</button>
+			<button ng-click="trade.tradeResource('meat')">Trade {{g.player.costOfResourceTrade}}x</button>
 		</div>
 		<div class="water">
 			<img src="img/water.png" alt="">
-			<button ng-click="trade.tradeResource('water')">Trade 4x</button>
+			<button ng-click="trade.tradeResource('water')">Trade {{g.player.costOfResourceTrade}}x</button>
 		</div>
 		<div class="meat">
 			<img src="img/brick.png" alt="">
-			<button ng-click="trade.tradeResource('brick')">Trade 4x</button>
+			<button ng-click="trade.tradeResource('brick')">Trade {{g.player.costOfResourceTrade}}x</button>
 		</div>
 
 		<div class="purchase pointer">
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="trade-cards">
-		Card trade (1x each resource for cost of card)
+		Card trade (gain resources based off cost of card)
 		<div class="cards-to-trade">
 			<card ng-repeat="card in g.game.player.creature" ng-show="card.length" card="card[0]" total="card.length" trade="trade.sellCard"></card>
 			<card ng-repeat="card in g.game.player.defense" ng-show="card.length" card="card[0]" total="card.length" trade="trade.sellCard"></card>

@@ -1,4 +1,5 @@
 <div class="card">
+    <div class="remove-from-play" ng-show="card.isPlayed && g.turnAvailable" ng-click="g.removeCardFromPlay(card)">x</div>
     <div class="resources-needed" ng-if="card.resourcesNeeded">
         <div ng-repeat="(resource, cost) in card.resourcesNeeded">
             <span>{{cost}}</span>

@@ -69,3 +69,17 @@
     align-items: center;
     justify-content: center;
 }
+.card .remove-from-play {
+    position: absolute;
+    top: -7px;
+    left: -7px;
+    background: #792b2b;
+    border-radius: 100%;
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+}

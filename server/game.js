@@ -1,17 +1,36 @@
 var Player = require('./player'),
 	Card = require('./card'),
-	cards = require('./lib/cards');
+	cards = require('./lib/cards'),
+	Chat = require('./chat');
 
 function Game(io) {
 	this.player1;
 	this.player2;
 
 	this.io = io;
+	this.id = Date.now();
 
 	this.cards = cards.map(v => new Card(v));
+
+	this.chat = new Chat(io, this.id);
 }
 
 Game.prototype = {
+	login: function (name, socket, cb) {
+        var player = this.addPlayer({
+            name: name,
+            hp: 100,
+            id: socket.id,
+            ip: socket.handshake.address,
+            socket: socket
+        });
+        socket.loggedIn = true;
+        if(this.isFull()){
+            this.getOpponent(socket.id).socket.emit('turnAvailable');
+        }
+        this.chat.init(socket);
+        cb(player, this.cards);
+    },
 	addPlayer: function(playerObj) {
 		if(!this.player1){
 			this.player1 = new Player(playerObj);
@@ -50,6 +69,11 @@ Game.prototype = {
 		if(player.turnAvailable)
 			player.playCard(card, cb);
 	},
+	removeCardFromPlay: function(id, card, cb) {
+		var player = this.getPlayer(id);
+		if(player.turnAvailable)
+			player.removeCardFromPlay(card, cb);
+	},
 	barterResources: function(id) {
 		var player = this.getPlayer(id);
 		if(player.turnAvailable){}
@@ -60,8 +84,8 @@ Game.prototype = {
 
 		if(!player)return;
 
-		if(player[resource] >= 4){
-			player[resource] -= 4;
+		if(player[resource] >= player.costOfResourceTrade){
+			player[resource] -= player.costOfResourceTrade;
 			player[getResource]++
 			player.updateClient();
 		}else{
@@ -76,7 +100,7 @@ Game.prototype = {
 
 		if(player.hasCard(card)){
 			for(var i in card.resourcesNeeded)
-				player[i]++;
+				player[i] += card.resourcesNeeded[i];
 			player.removeCard(card);
 			player.updateClient();
 		}else{
@@ -92,7 +116,7 @@ Game.prototype = {
 		opponent.turnAvailable = true;
 		opponent.socket.emit('turnAvailable', player.client());
 
-		if(opponent.hasPlayedCards){
+		if(opponent.playedCards.length){
 			this.calculateDamage();
 			if(this.player1.hp <= 0 || this.player2.hp <= 0){
 				this.player1.socket.emit('endGame', 'win');
@@ -124,8 +148,13 @@ Game.prototype = {
 		return Players;	
 	},
 	replay: function() {
-		this.player1.reset();
-		this.player2.reset();
+		var player1 = this.player1.originalObj,
+			player2 = this.player2.originalObj;
+		this.player1 = null;
+		this.player2 = null;
+
+		this.addPlayer(player1);
+		this.addPlayer(player2);
 		this.io.emit('replay', [this.player1.client(), this.player2.client()]);
 	},
 	clearPlayers: function() {
@@ -138,13 +167,13 @@ Game.prototype = {
 	        dam1, dam2;
 
 
-	    for(var i in player1.playedCards){
-	        player1.playedCard.att += player1.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
-	        player1.playedCard.def += player1.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
+	    for(var i = 0; i < player1.playedCards.length; i++){
+	        player1.playedCard.att += player1.playedCards[i].att || 0;
+	        player1.playedCard.def += player1.playedCards[i].def || 0;
 	    }
 	    for(var i in player2.playedCards){
-	        player2.playedCard.att += player2.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
-	        player2.playedCard.def += player2.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
+	        player2.playedCard.att += player2.playedCards[i].att || 0;
+	        player2.playedCard.def += player2.playedCards[i].def || 0;
 	    }
 
 	    if(player1.playedCard && player2.playedCard){

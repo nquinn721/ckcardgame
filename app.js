@@ -14,6 +14,9 @@ server.listen(process.env.PORT || 3000, function () {
     console.log('Listening on port 3000');
 });
 
+var gm = require('./server/gameManager'),
+    game;
+
 
 
 app.get('/', function (req, res) {
@@ -21,10 +24,7 @@ app.get('/', function (req, res) {
 });
 
 
-var Game = require('./server/game');
-var Chat = require('./server/chat');
-var game = new Game(io);
-var chat = new Chat(io);
+
 io.use(function(socket, next) {
     if(!socket.loggedIn)
         socket.emit('redirect');
@@ -33,35 +33,12 @@ io.use(function(socket, next) {
 });
 io.on('connection', function (socket) {
 
-    socket.on('login', function (name, cb) {
-        var player = game.addPlayer({
-            name: name,
-            hp: 100,
-            id: this.id,
-            ip: this.handshake.address,
-            socket: this
-        });
-        this.loggedIn = true;
-        if(game.isFull()){
-            game.getOpponent(this.id).socket.emit('turnAvailable');
+    socket.on('setupGame', function(gameId) {
+        if(!gameId){
+            gm.joinMatchMaking(this, io);
+        }else{
+            gm.joinGame(gameId, this);
         }
-        chat.init(socket);
-        cb(player, game.cards);
-    });
-
-
-    socket.on('drawCard', (cb) => game.drawCard(socket.id, cb));
-    socket.on('playCard',(card, cb) => game.playCard(socket.id, card, cb));
-    socket.on('endTurn', () => game.endTurn(socket.id));
-    socket.on('tradeResource', (a, b, cb) => game.tradeResource(socket.id, a, b, cb));
-    socket.on('tradeCard', (a, cb) => game.tradeCard(socket.id, a, cb));
-    socket.on('replay',() => game.replay());
-
-
-
-    socket.on('disconnect', () => {
-        game.removePlayer(socket.id);
-        socket.emit('disconnected');
-    });
+    })
 
 });

@@ -7,6 +7,7 @@ app.factory('Player', function (Card, $timeout) {
         this.cards = [];
         this.creature = {};
         this.defense = {};
+        this.showPlayedCards = {};
         this.brick = 0;
         this.meat = 0;
         this.water = 0;
@@ -25,6 +26,7 @@ app.factory('Player', function (Card, $timeout) {
             }, 2000);
 
         },
+        
         drawCard: function (card, dontshowcard) {
             var self = this;
             if(!card)return;
@@ -50,6 +52,16 @@ app.factory('Player', function (Card, $timeout) {
             }.bind(this), dontshowcard ? 10 : 800);
 
         },
+        updatePlayedCards: function() {
+            this.showPlayedCards = {};
+            var card;
+            for(var i = 0; i < this.playedCards.length; i++){
+                card = this.playedCards[i];
+                if(!this.showPlayedCards[card.id])this.showPlayedCards[card.id] = [];
+                this.showPlayedCards[card.id].push(card);
+            }
+            
+        },
 
         update: function(userObj) {
             this.totalAttack = 0;
@@ -62,9 +74,10 @@ app.factory('Player', function (Card, $timeout) {
             for(var i in userObj)
                 this[i] = userObj[i];
 
-            for(var i in this.playedCards){
-                this.totalAttack    += this.playedCards[i].map((v) =>  (v.att || 0)).reduce((a,b) => (a + b));
-                this.totalDefense   += this.playedCards[i].map((v) =>  (v.def || 0)).reduce((a,b) => (a + b));
+            for(var i = 0; i < this.playedCards.length; i++){
+                this.totalAttack    += this.playedCards[i].att || 0;
+                this.totalDefense   += this.playedCards[i].def || 0;
+                this.updatePlayedCards();
             }
 
             $timeout(function() {

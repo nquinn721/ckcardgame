@@ -8,10 +8,13 @@ function Player(playerObj) {
 	this.brick = 0;
 	this.creature = {};
 	this.defense  = {};
-	this.playedCards = {};
+	this.playedCards = [];
 	this.playedCard = {att: 0, def: 0};
+	this.costOfResourceTrade = 3;
 
 	this.socket = playerObj.socket;
+
+	this.originalObj = playerObj;
 }
 
 Player.prototype = {
@@ -33,22 +36,24 @@ Player.prototype = {
 		
 		var cardCanBePlayed = true;
 
+		// Check if we have available resources
         for(var i in card.resourcesNeeded){
             if(this[i] < card.resourcesNeeded[i]){
                 cardCanBePlayed = false;
             }
         }
 
+        // Check if we have the card
         if(cardCanBePlayed && card && this[card.type] && this[card.type][card.id]){
+
+        	// Remove resources
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
 
-            if(!this.playedCards[card.id])
-            	this.playedCards[card.id] = [];
-            this.playedCards[card.id].push(card);
-
-            this.hasPlayedCards = true;
+            card.isPlayed = true;
+            this.playedCards.push(card);
             
+            // Remove card
             for(var i in this[card.type])
                 if(this[card.type][i].length && this[card.type][i][0].id === card.id)this[card.type][i].pop();
 
@@ -58,6 +63,18 @@ Player.prototype = {
         	cb();
         }
 
+	},
+	removeCardFromPlay: function(card, cb) {
+
+		this.drawCard(card);
+
+		for(var i in card.resourcesNeeded)
+			this[i] += card.resourcesNeeded[i];
+
+		this.playedCards.splice(this.playedCards.indexOf(card), 1);
+
+
+		this.updateClient();
 	},
 	hasCard: function(card) {
 		return this[card.type][card.id].length;
@@ -75,16 +92,16 @@ Player.prototype = {
 	createOpponent: function(opponent) {
 		this.socket.emit('createOpponent', opponent);
 	},
-	reset: function() {
-		this.hp = 100;
-		this.meat = 0;
-		this.water = 0;
-		this.brick = 0;
-		this.creature = {};
-		this.defense  = {};
-		this.playedCards = {};
-		this.playedCard = {att: 0, def: 0};
-	},
+	// reset: function() {
+	// 	this.hp = 100;
+	// 	this.meat = 0;
+	// 	this.water = 0;
+	// 	this.brick = 0;
+	// 	this.creature = {};
+	// 	this.defense  = {};
+	// 	this.playedCards = {};
+	// 	this.playedCard = {att: 0, def: 0};
+	// },
 	client: function() {
 		return {
 			name: this.name,
@@ -96,6 +113,7 @@ Player.prototype = {
 			water: this.water,
 			brick: this.brick,
 			playedCards: this.playedCards,
+			costOfResourceTrade: this.costOfResourceTrade,
 			hasPlayedCards: this.hasPlayedCards
 		}
 	}

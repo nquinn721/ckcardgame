@@ -2,7 +2,7 @@ app.controller('main', function (socket, game, chat, $location) {
     var self = this;
     this.game = game;
     this.title = 'Welcome to the card game!';
-
+    socket.emit('setupGame');
 	socket.on('updatePlayers', v => this.game.updatePlayers(v));
     socket.on('updatePlayer', v => this.game.updatePlayer(v));
     socket.on('updateOpponent', v => this.game.updateOpponent(v));
