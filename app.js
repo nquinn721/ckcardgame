@@ -33,12 +33,18 @@ io.use(function(socket, next) {
 });
 io.on('connection', function (socket) {
 
-    socket.on('setupGame', function(gameId) {
-        if(!gameId){
-            gm.joinMatchMaking(this, io);
+    socket.emit('games', gm.getPrivateGamesList());
+
+    socket.on('login', function(name, gameName, cb) {
+        if(!gameName){
+            gm.joinPublicGame(name, this, io, cb);
         }else{
-            gm.joinGame(gameId, this);
+            gm.createPrivateGame(name, gameName, io, this, cb);
         }
-    })
+    });
+
+    socket.on('join', function(name, gameName, cb) {
+        gm.joinPrivateGame(name, gameName, io, this, cb);
+    });
 
 });

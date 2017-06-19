@@ -92,16 +92,6 @@ Player.prototype = {
 	createOpponent: function(opponent) {
 		this.socket.emit('createOpponent', opponent);
 	},
-	// reset: function() {
-	// 	this.hp = 100;
-	// 	this.meat = 0;
-	// 	this.water = 0;
-	// 	this.brick = 0;
-	// 	this.creature = {};
-	// 	this.defense  = {};
-	// 	this.playedCards = {};
-	// 	this.playedCard = {att: 0, def: 0};
-	// },
 	client: function() {
 		return {
 			name: this.name,

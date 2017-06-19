@@ -180,18 +180,12 @@ ng-view {
     box-sizing: border-box;
 }
 
-form.login-box {
-    width: 50%;
+.game-name {
+    position: absolute;
+    top: -23px;
+    z-index: 1;
     background: #222;
-    padding: 27px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    height: 27%;
-}
-form.login-box div {
-    display: flex;
+    padding: 3px 7px;
 }
 
 .attack-cards-area .total{

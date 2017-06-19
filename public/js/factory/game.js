@@ -1,12 +1,12 @@
 
 app.factory('game', function (Player, $timeout) {
     function Game() {
-        this.cards;
+        this.name;
     }
 
     Game.prototype = {
-        init: function(playerObj, cards) {
-            this.cards = cards;
+        init: function(playerObj, name) {
+            this.name = name;
             this.createPlayer(playerObj);
         },
         setupController: function(controller) {
@@ -38,7 +38,6 @@ app.factory('game', function (Player, $timeout) {
             this.opponent.type = 'opponent';
         },
         updatePlayers: function(players) {
-            console.log(players);
             for(var i = 0; i < players.length; i++){
                 if(players[i].id === this.player.id)this.player.update(players[i]);
                 else this.opponent.update(players[i]);

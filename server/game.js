@@ -3,12 +3,13 @@ var Player = require('./player'),
 	cards = require('./lib/cards'),
 	Chat = require('./chat');
 
-function Game(io) {
+function Game(io, name) {
 	this.player1;
 	this.player2;
 
 	this.io = io;
 	this.id = Date.now();
+	this.name = name || null;
 
 	this.cards = cards.map(v => new Card(v));
 
@@ -29,7 +30,7 @@ Game.prototype = {
             this.getOpponent(socket.id).socket.emit('turnAvailable');
         }
         this.chat.init(socket);
-        cb(player, this.cards);
+        cb(player, this.name);
     },
 	addPlayer: function(playerObj) {
 		if(!this.player1){

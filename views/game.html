@@ -1,4 +1,5 @@
 <div class="game-area">
+    <div class="game-name" ng-show="g.game.name">Game: {{g.game.name}}</div>
     <div ng-if="g.isadmin">
         <button ng-click="g.pause()" ng-if="g.autoplay">Pause</button>
         <button ng-click="g.pause()" ng-if="!g.autoplay">Play</button>
@@ -33,6 +34,7 @@
         </div>
         
 
-
+        
     </div>
+
 </div>
