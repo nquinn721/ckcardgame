@@ -13,8 +13,7 @@ app.controller('main', function (socket, game, chat, $location) {
     socket.on('endGame', v => this.game.end(v));
     socket.on('allMessages', msgs => chat.setAllMessages(msgs));
     socket.on('games', games => {
-        console.log(games);
-        this.game.privateGames = games
+        this.game.games = games
     });
     socket.on('redirect', function () {
         $location.path('/');

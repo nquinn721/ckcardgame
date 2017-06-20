@@ -7,18 +7,19 @@
 	</div>
 	<div class="content">
 		<div class="games" ng-show="l.tab === 'join'">
-	    	<div ng-show="l.joinError" class="error bg-danger">{{l.joinError}}</div>
+	    	<div ng-show="l.error" class="error bg-danger">{{l.error}}</div>
 			<h3>Join a game</h3>
-			<select class="form-control" ng-model="l.privateGame">
+			<select class="form-control" ng-model="l.joinGameChosen" ng-change="l.setGameChosen()">
 		      <option value="">Pick a game</option>
-		      <option ng-repeat="game in main.game.privateGames" value="{{game.name}}">{{game.name}}</option>
+		      <option ng-repeat="game in main.game.games" value="{{game.name}}">{{game.name}}</option>
 		    </select>
+			<input type="text" class="form-control" ng-model="l.pw" ng-show="l.joinGame && l.joinGame.gameType !== 'public'" placeholder="Password">
 			<input type="text" class="form-control" ng-model="l.name" placeholder="Name...">
-	    	<button type="submit" class="btn btn-primary" ng-click="l.login()">Login</button>
+	    	<button type="submit" class="btn btn-primary" ng-click="l.login()" ng-disabled="!l.isValidToSend()">Login</button>
 
 		</div>
 		<div class="login" ng-show="l.tab === 'login'">
-	    	<div ng-show="l.createError" class="error bg-danger">{{l.createError}}</div>
+	    	<div ng-show="l.error" class="error bg-danger">{{l.error}}</div>
 		    <h3>Login</h3>
 		    <div>
 		    	Game Type<br>
@@ -29,10 +30,11 @@
 			</div>
 	    	<div ng-show="l.gameType === 'private'">
 	    		<input type="text" class="form-control" placeholder="Game name..." ng-model="l.privateGame">
+	    		<input type="text" class="form-control" placeholder="Password" ng-model="l.pw">
 	    	</div>
 			<div>
 		    	<input autofocus type="text" class="form-control" ng-model="l.name" placeholder="Name...">
-		    	<button type="submit" class="btn btn-primary" ng-click="l.login()">Login</button>
+		    	<button type="submit" class="btn btn-primary" ng-click="l.login()" ng-disabled="!l.isValidToSend()">Login</button>
 			</div>
 		</div>
 	</div>

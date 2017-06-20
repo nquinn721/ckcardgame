@@ -1,8 +1,8 @@
-function Player(playerObj) {
+function Player(name, socket, id, ip, playerObj) {
 	this.hp = 100;
-	this.id = playerObj.id;
-	this.ip = playerObj.ip;
-	this.name = playerObj.name;
+	this.id = id;
+	this.ip = ip;
+	this.name = name;
 	this.meat = 0;
 	this.water = 0;
 	this.brick = 0;
@@ -12,9 +12,11 @@ function Player(playerObj) {
 	this.playedCard = {att: 0, def: 0};
 	this.costOfResourceTrade = 3;
 
-	this.socket = playerObj.socket;
+	this.socket = socket;
 
-	this.originalObj = playerObj;
+	for(var i in playerObj)
+		this[i] = playerObj[i];
+
 }
 
 Player.prototype = {
@@ -89,7 +91,12 @@ Player.prototype = {
 	updateClient: function() {
 		this.socket.emit('updatePlayer', this.client());	
 	},
+	updateOpponent: function(opponent) {
+		opponent = opponent && opponent.client ? opponent.client() : opponent;
+		this.socket.emit('updateOpponent', opponent);
+	},
 	createOpponent: function(opponent) {
+		opponent = opponent && opponent.client ? opponent.client() : opponent;
 		this.socket.emit('createOpponent', opponent);
 	},
 	client: function() {
@@ -103,8 +110,7 @@ Player.prototype = {
 			water: this.water,
 			brick: this.brick,
 			playedCards: this.playedCards,
-			costOfResourceTrade: this.costOfResourceTrade,
-			hasPlayedCards: this.hasPlayedCards
+			costOfResourceTrade: this.costOfResourceTrade
 		}
 	}
 }

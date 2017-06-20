@@ -14,8 +14,9 @@ server.listen(process.env.PORT || 3000, function () {
     console.log('Listening on port 3000');
 });
 
-var gm = require('./server/gameManager'),
-    game;
+var gm = require('./server/gameManager');
+
+gm.init(io);
 
 
 
@@ -33,18 +34,24 @@ io.use(function(socket, next) {
 });
 io.on('connection', function (socket) {
 
-    socket.emit('games', gm.getPrivateGamesList());
+    socket.emit('games', gm.getGamesList());
 
-    socket.on('login', function(name, gameName, cb) {
+    socket.on('login', function(name, gameName, pw, cb) {
+        this.name = name;
         if(!gameName){
-            gm.joinPublicGame(name, this, io, cb);
+            gm.joinPublicGame(name, this, cb);
         }else{
-            gm.createPrivateGame(name, gameName, io, this, cb);
+            if(pw){
+                gm.createPrivateGame(name, gameName, pw, this, cb);
+            }else{
+                cb({error: true, msg: 'password'});
+            }
         }
     });
 
-    socket.on('join', function(name, gameName, cb) {
-        gm.joinPrivateGame(name, gameName, io, this, cb);
+    socket.on('join', function(name, gameName, pw, cb) {
+        this.name = name;
+        gm.joinPrivateGame(name, gameName, pw, this, cb);
     });
 
 });

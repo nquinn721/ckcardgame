@@ -250,5 +250,13 @@ ng-view {
     justify-content: space-between;
 }
 
-
+button[disabled] {
+    background: #333;
+    border: 1px solid black;
+    cursor:not-allowed;
+}
+button[disabled]:hover{
+    background-color: #333 !important;
+    border-color: black !important;
+}
 

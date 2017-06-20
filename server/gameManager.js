@@ -7,43 +7,48 @@ function GameManager() {
 }
 
 GameManager.prototype = {
-	joinPublicGame: function(name, socket, io, cb) {
+	init: function(io) {
+		this.io = io;
+	},
+	joinPublicGame: function(name, socket, cb) {
 		var gameJoined;
 
-		if(this.publicGames.length){
-			for(var i = 0; i < this.publicGames.length; i++){
-				if(!this.publicGames[i].isFull()){
-					gameJoined = true;
-					this.setUpSocketEvents(name, socket, this.publicGames[i], cb);
-				}
+		for(var i = 0; i < this.publicGames.length; i++){
+			if(!this.publicGames[i].isFull()){
+				gameJoined = true;
+				this.setUpSocketEvents(name, socket, this.publicGames[i], cb);
 			}
+		}
 
-			if(!gameJoined){
-				this.createGame(name, null, true, socket, io, cb);
-			}
-		}else{
-			this.createGame(name, null, true, socket, io, cb);
+		if(!gameJoined){
+			this.createGame(name, null, null, true, socket, cb);
 		}
 	},
-	joinPrivateGame: function(name, gameName, io, socket, cb) {
-		var game = this.getPrivateGame(gameName);
-		if(game && !game.isFull()){
+	joinPrivateGame: function(name, gameId, pw, socket, cb) {
+		var game = this.getPrivateGame(gameId);
+
+		if(game && !game.isFull() && game.pw === pw){
 			this.setUpSocketEvents(name, socket, game, cb);
+		}else if(game){
+			if(game.isFull())
+				cb({error: true, msg: 'full'});
+			if(game.pw !== pw)
+				cb({error: true, msg: 'password'});
 		}else{
-			cb('full');
+			cb({error: true, msg: 'not available'});
 		}
 	},
-	createPrivateGame: function(name, gameName, io, socket, cb){
-		var game = this.getPrivateGame(gameName);
+	createPrivateGame: function(name, gameId, pw, socket, cb){
+		var game = this.getPrivateGame(gameId);
 
 		if(!game){
-			this.createGame(name, gameName, false, socket, io, cb);
+			this.createGame(name, gameId, pw, false, socket, cb);
 		}else{
-			cb('not available');
+			cb({error: true, msg: 'Game isnot available'});
 		}
 	},
-	createGame: function(name, gameName, public, socket, io, cb) {
-		var game = new Game(io, gameName);
+	createGame: function(name, gameId, pw, public, socket, cb) {
+		var game = new Game(this.io, gameId, pw);
 
 		if(public)
 			this.publicGames.push(game);
@@ -51,7 +56,7 @@ GameManager.prototype = {
 			this.privateGames.push(game);
 
 		this.setUpSocketEvents(name, socket, game, cb);
-		return game;
+		this.io.emit('games', this.getGamesList());
 	},
 	
 	leaveGame: function(id, user) {
@@ -61,11 +66,37 @@ GameManager.prototype = {
 			game.leaveGame(user);
 		}
 	},
-	getPrivateGame: function(name) {
-		return this.privateGames.filter(v => v.name === name)[0];
+	removePlayer: function(game, playerId) {
+		game.removePlayer(playerId);
+
+		if(game.isEmpty()){
+			this.removeGame(game);
+		}
+	},
+	removeGame: function(gameId) {
+		var game = gameId || this.getGame(gameId);
+		this[game.gameType + 'Games'].splice(this[game.gameType + 'Games'].indexOf(game), 1);
+		this.io.emit('games', this.getGamesList());
+	},
+
+	getGame: function(gameId) {
+		return this.getPrivateGame(gameId) || this.getPublicGame(gameId);
+	},
+	getPrivateGame: function(gameId) {
+		return this.privateGames.filter(v => v.id === gameId)[0];
+	},
+	getPublicGame: function(gameId) {
+		return this.publicGames.filter(v => v.id === gameId)[0];
 	},
 	getPrivateGamesList: function() {
-		return this.privateGames.filter(v => !v.isFull()).map(v => ({name: v.name, id: v.id}));
+		return this.privateGames.filter(v => !v.isFull()).map(v => ({name: v.id, gameType: v.gameType}));
+	},
+	getPublicGamesList: function() {
+		return this.publicGames.filter(v => !v.isFull()).map(v => ({name: v.id, gameType: v.gameType}));
+	},
+	getGamesList: function() {
+		return this.getPrivateGamesList();
+		// return [].concat(this.getPrivateGamesList()).concat(this.getPublicGamesList());
 	},
 	setUpSocketEvents: function(name, socket, game, cb) {
 	    socket.on('drawCard', (cb) => game.drawCard(socket.id, cb));
@@ -75,7 +106,7 @@ GameManager.prototype = {
 	    socket.on('tradeResource', (a, b, cb) => game.tradeResource(socket.id, a, b, cb));
 	    socket.on('tradeCard', (a, cb) => game.tradeCard(socket.id, a, cb));
 	    socket.on('replay',() => game.replay());
-	    socket.on('disconnect', () => game.removePlayer(socket.id));
+	    socket.on('disconnect', () => this.removePlayer(game, socket.id));
 
 		game.login(name, socket, cb)
 

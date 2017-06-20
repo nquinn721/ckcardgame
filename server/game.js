@@ -3,54 +3,71 @@ var Player = require('./player'),
 	cards = require('./lib/cards'),
 	Chat = require('./chat');
 
-function Game(io, name) {
+function Game(io, id, pw) {
 	this.player1;
 	this.player2;
 
 	this.io = io;
-	this.id = Date.now();
-	this.name = name || null;
+	this.id = id || Date.now();
+	this.pw = pw;
+	this.gameType = pw ? 'private' : 'public';
 
 	this.cards = cards.map(v => new Card(v));
 
 	this.chat = new Chat(io, this.id);
+
+	this.createdAt = Date.now();
 }
 
 Game.prototype = {
 	login: function (name, socket, cb) {
-        var player = this.addPlayer({
-            name: name,
-            hp: 100,
-            id: socket.id,
-            ip: socket.handshake.address,
-            socket: socket
-        });
+        var player = this.addPlayer(name, socket, cb);
         socket.loggedIn = true;
-        if(this.isFull()){
+        
+    },
+	addPlayer: function(name, socket, cb) {
+		var player;
+		if(!this.player1){
+			this.player1 = this.createPlayer(name, socket, this.oldPlayer);
+			this.player1.turnAvailable = true;
+			player = this.player1.client();
+		} else if(!this.player2){
+			this.player2 = this.createPlayer(name, socket, this.oldPlayer);
+			player = this.player2.client();
+			
+		}
+
+		this.player1 && this.player1.createOpponent(this.player2);
+		this.player2 && this.player2.createOpponent(this.player1);
+
+		this.oldPlayer = null;
+
+
+		if(this.isFull()){
             this.getOpponent(socket.id).socket.emit('turnAvailable');
         }
         this.chat.init(socket);
-        cb(player, this.name);
-    },
-	addPlayer: function(playerObj) {
-		if(!this.player1){
-			this.player1 = new Player(playerObj);
-			this.player1.turnAvailable = true;
-			return this.player1.client();
-		} else if(!this.player2){
-			this.player2 = new Player(playerObj);
-			this.player1.createOpponent(this.player2.client());
-			this.player2.createOpponent(this.player1.client());
-			return this.player2.client();
-		} else{
-			return false;
-		}
+        cb(player, this.id);
+
+
+	},
+	createPlayer: function(name, socket, oldPlayer) {
+		return new Player(name, socket, socket.id, socket.handshake.address, oldPlayer);
 	},
 	removePlayer: function(id) {
-		if(this.player1 && this.player1.id === id)
-			this.player1 = null;
-		if(this.player2 && this.player2.id === id)
-			this.player2 = null;
+		var opponent = this.getOpponent(id),
+			player = this.player1 && this.player1.id === id ? 'player1' : 'player2';
+
+
+		this.oldPlayer = this[player].client();
+		
+		this[player] = null;
+
+		delete this.oldPlayer.id;
+		delete this.oldPlayer.name;
+		delete this.oldPlayer.ip;
+		if(opponent)
+			opponent.updateOpponent(null);
 	},
 
 	// Turn
@@ -123,7 +140,7 @@ Game.prototype = {
 				this.player1.socket.emit('endGame', 'win');
 				this.player2.socket.emit('endGame');
 			}else{
-				this.io.emit('finishAttack', [this.player1.client(), this.player2.client()]);
+				this.io.to(this.id).emit('finishAttack', [this.player1.client(), this.player2.client()]);
 			}
 		}
 	},
@@ -131,6 +148,9 @@ Game.prototype = {
 
 	isFull: function () {
 		return this.player1 && this.player2;	
+	},
+	isEmpty: function() {
+		return !this.player1 && !this.player2;	
 	},
 	updatePlayers: function() {
 		if(this.player1)this.player1.updateClient();
@@ -156,7 +176,7 @@ Game.prototype = {
 
 		this.addPlayer(player1);
 		this.addPlayer(player2);
-		this.io.emit('replay', [this.player1.client(), this.player2.client()]);
+		this.io.to(this.id).emit('replay', [this.player1.client(), this.player2.client()]);
 	},
 	clearPlayers: function() {
 		this.player1 = null;
@@ -200,6 +220,5 @@ Game.prototype = {
 
 	}
 }
-
 
 module.exports = Game;

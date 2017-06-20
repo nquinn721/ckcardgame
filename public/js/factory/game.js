@@ -34,6 +34,10 @@ app.factory('game', function (Player, $timeout) {
             this.player.type = 'player';
         },
         createOpponent: function(opponent) {
+            if(!opponent){
+                this.opponent = null;
+                return;
+            }
             this.opponent = new Player(opponent);
             this.opponent.type = 'opponent';
         },
@@ -47,7 +51,8 @@ app.factory('game', function (Player, $timeout) {
             this.player.update(player);
         },
         updateOpponent: function(opponent) {
-            if(this.opponent)
+            if(!opponent)delete this.opponent;
+            else if(this.opponent)
                 this.opponent.update(opponent);
         },
         replay: function(players) {

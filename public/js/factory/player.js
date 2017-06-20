@@ -1,9 +1,9 @@
 
 app.factory('Player', function (Card, $timeout) {
     function Player(data) {
-        this.id = data.id;
-        this.name = data.name;
-        this.hp = data.hp;
+        this.id = null;
+        this.name = null;
+        this.hp = null;
         this.cards = [];
         this.creature = {};
         this.defense = {};
@@ -14,6 +14,9 @@ app.factory('Player', function (Card, $timeout) {
 
         this.totalAttack = 0;
         this.totalDefense = 0;
+
+        for(var i in data)
+            this[i] = data[i];
 
     }
 
