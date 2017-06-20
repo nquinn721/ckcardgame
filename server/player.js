@@ -99,6 +99,9 @@ Player.prototype = {
 		opponent = opponent && opponent.client ? opponent.client() : opponent;
 		this.socket.emit('createOpponent', opponent);
 	},
+	logout: function() {
+		this.socket.loggedIn = false;
+	},
 	client: function() {
 		return {
 			name: this.name,

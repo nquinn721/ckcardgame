@@ -73,7 +73,14 @@ Game.prototype = {
 	// Turn
 	drawCard: function(id, cb) {
 		var player = this.getPlayer(id),
+			opponent = this.getOpponent(id),
 			card;
+
+		if(!opponent){
+			this.sendToGame('globalError', 'Waiting on opponent');
+			cb();
+			return;
+		}
 
 		if(player.turnAvailable){
 			card = this.cards[Math.floor(Math.random() * this.cards.length)];
@@ -84,12 +91,12 @@ Game.prototype = {
 	},
 	playCard: function(id, card, cb) {
 		var player = this.getPlayer(id);
-		if(player.turnAvailable)
+		if(player && player.turnAvailable)
 			player.playCard(card, cb);
 	},
 	removeCardFromPlay: function(id, card, cb) {
 		var player = this.getPlayer(id);
-		if(player.turnAvailable)
+		if(player && player.turnAvailable)
 			player.removeCardFromPlay(card, cb);
 	},
 	barterResources: function(id) {
@@ -129,7 +136,9 @@ Game.prototype = {
 		var player = this.getPlayer(id),
 			opponent = this.getOpponent(id);
 
-		
+		if(!player || !opponent)return;
+
+
 		player.turnAvailable = false;
 		opponent.turnAvailable = true;
 		opponent.socket.emit('turnAvailable', player.client());
@@ -140,7 +149,7 @@ Game.prototype = {
 				this.player1.socket.emit('endGame', 'win');
 				this.player2.socket.emit('endGame');
 			}else{
-				this.io.to(this.id).emit('finishAttack', [this.player1.client(), this.player2.client()]);
+				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
 			}
 		}
 	},
@@ -176,11 +185,21 @@ Game.prototype = {
 
 		this.addPlayer(player1);
 		this.addPlayer(player2);
-		this.io.to(this.id).emit('replay', [this.player1.client(), this.player2.client()]);
+		this.sendToGame('replay', [this.player1.client(), this.player2.client()]);
+	},
+	sendRemoveToUsers: function() {
+		if(this.player1)
+			this.player1.logout();
+		if(this.player2)
+			this.player2.logout();
+		this.sendToGame('disband');	
 	},
 	clearPlayers: function() {
 		this.player1 = null;
 		this.player2 = null;
+	},
+	sendToGame: function (event, data) {
+		this.io.to(this.id).emit(event, data);
 	},
 	calculateDamage: function () {
 		var player1 = this.player1,

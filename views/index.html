@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/player.css">
 </head>
 <body ng-controller="main as main">
-
+<div class="global-error" ng-show="main.globalError">{{main.globalError}}</div>
 <ng-view></ng-view>
 
 

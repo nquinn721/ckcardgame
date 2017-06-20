@@ -1,4 +1,4 @@
-app.controller('main', function (socket, game, chat, $location) {
+app.controller('main', function (socket, game, chat, $location, $timeout) {
     var self = this;
     this.game = game;
     this.title = 'Welcome to the card game!';
@@ -12,17 +12,23 @@ app.controller('main', function (socket, game, chat, $location) {
     socket.on('replay', v => this.game.replay(v))
     socket.on('endGame', v => this.game.end(v));
     socket.on('allMessages', msgs => chat.setAllMessages(msgs));
-    socket.on('games', games => {
-        this.game.games = games
-    });
-    socket.on('redirect', function () {
+    socket.on('games', games => this.game.games = games);
+    socket.on('disband', () => {
+        this.showGlobalError('Your opponent left');
         $location.path('/');
     });
-
-
-    socket.on('disconnected', function () {
-        self.disconnected = true;
+    socket.on('globalError', (msg) => {
+        this.showGlobalError(msg)
     });
+    socket.on('redirect', () => {
+        console.log('redirect');
+        $location.path('/')});
+
+    this.showGlobalError = function(msg) {
+        this.globalError = msg;
+        $timeout(() => this.globalError = false, 4000);
+    }
+
 });
 
 

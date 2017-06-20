@@ -6,13 +6,26 @@ html, body {
     background-size:100% 100%;
     color:white;
 }
-c {
+* {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
        -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none;
+}
+.global-error {
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #884242;
+    color: white;
+    font-size: 19px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 .pointer{
     cursor: pointer;

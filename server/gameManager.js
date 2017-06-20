@@ -59,24 +59,30 @@ GameManager.prototype = {
 		this.io.emit('games', this.getGamesList());
 	},
 	
-	leaveGame: function(id, user) {
-		var game = this.getGame(id);
-
-		if(game){
-			game.leaveGame(user);
-		}
-	},
 	removePlayer: function(game, playerId) {
 		game.removePlayer(playerId);
 
-		if(game.isEmpty()){
+		if(game.isEmpty() || game.gameType === 'public'){
+			game.sendRemoveToUsers();
 			this.removeGame(game);
+		}else{
+			this.setDestroyTimer(game);
+			this.io.to(game.id).emit('globalError', 'Your opponent has left, if your opponent does not rejoin in 30 minutes this game will be ended');
 		}
 	},
 	removeGame: function(gameId) {
 		var game = gameId || this.getGame(gameId);
+		game.sendRemoveToUsers();
 		this[game.gameType + 'Games'].splice(this[game.gameType + 'Games'].indexOf(game), 1);
 		this.io.emit('games', this.getGamesList());
+	},
+
+	setDestroyTimer: function(game) {
+		setTimeout(() => {
+			game = this.getPrivateGame(game.id);
+			if(game && !game.isFull())
+				this.removeGame(game);
+		},  60 * 1000)
 	},
 
 	getGame: function(gameId) {
