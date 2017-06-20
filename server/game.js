@@ -23,6 +23,7 @@ Game.prototype = {
 	login: function (name, socket, cb) {
         var player = this.addPlayer(name, socket, cb);
         socket.loggedIn = true;
+        socket.game = this.id;
         
     },
 	addPlayer: function(name, socket, cb) {
@@ -58,7 +59,10 @@ Game.prototype = {
 		var opponent = this.getOpponent(id),
 			player = this.player1 && this.player1.id === id ? 'player1' : 'player2';
 
+		if(!this[player])return;
 
+		
+		this[player].socket.leave(this.id);
 		this.oldPlayer = this[player].client();
 		
 		this[player] = null;

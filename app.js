@@ -53,5 +53,6 @@ io.on('connection', function (socket) {
         this.name = name;
         gm.joinPrivateGame(name, gameName, pw, this, cb);
     });
+    socket.on('logout', () => gm.removePlayer(socket.game, socket.id))
 
 });

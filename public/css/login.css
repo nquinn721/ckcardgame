@@ -50,3 +50,14 @@ form.login-box {
 .login-box .tabs > div:not(.selected) {
     box-shadow: inset 0 0 10px black;
 }
+
+.login-box button[disabled] {
+    background: #333;
+    border: 1px solid black;
+    cursor:not-allowed;
+}
+.login-box button[disabled]:hover{
+    background-color: #333 !important;
+    border-color: black !important;
+}
+
