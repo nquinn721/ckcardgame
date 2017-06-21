@@ -29,7 +29,9 @@
         <div class="player-area">
             <player g="g" player="g.game.player"></player>
             <resources></resources>
-            <div class="game-message" ng-show="g.game.gameMessage">{{g.game.gameMessage}}</div>
+            <div class="game-message" ng-show="g.game.gameMessage">
+                <div class="message">{{g.game.gameMessage}}</div>
+            </div>
             <player g="g" player="g.game.opponent"></player>
         </div>
         <field></field>

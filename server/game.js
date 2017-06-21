@@ -144,6 +144,7 @@ Game.prototype = {
 
 
 		player.turnAvailable = false;
+		opponent.updateOpponent(player);
 
 		if(opponent.playedCards.length){
 			this.calculateDamage();

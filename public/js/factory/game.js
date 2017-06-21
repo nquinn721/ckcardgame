@@ -2,7 +2,6 @@
 app.factory('game', function (Player, $timeout) {
     function Game() {
         this.name;
-        this.gameMessage = 'Hey you cant do that';
     }
 
     Game.prototype = {
