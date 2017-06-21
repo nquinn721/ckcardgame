@@ -30,6 +30,11 @@ app.controller('main', function (socket, game, chat, $location, $timeout) {
         $timeout(() => this.globalError = false, 4000);
     }
 
+    this.logout = function() {
+        socket.emit('logout');
+        $location.path('/');
+    }
+
 });
 
 

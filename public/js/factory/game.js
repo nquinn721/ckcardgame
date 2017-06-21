@@ -75,13 +75,16 @@ app.factory('game', function (Player, $timeout) {
             else return this.opponent;
         },
         end: function (lose) {
-            if(lose){
-                this.lose = true;
-            }else{
-                this.win = true;
-            }
+            $timeout(() =>{
+                if(lose){
+                    this.lose = true;
+                }else{
+                    this.win = true;
+                }
 
-            this.gameEnded = true;
+                this.gameEnded = true;
+                
+            }, 3000);
 
         }
     };

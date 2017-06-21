@@ -60,6 +60,8 @@ GameManager.prototype = {
 	},
 	
 	removePlayer: function(game, playerId) {
+		game = this.getGame(game) || game;
+
 		game.removePlayer(playerId);
 
 		if(game.isEmpty() || game.gameType === 'public'){

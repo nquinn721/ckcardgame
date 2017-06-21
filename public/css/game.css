@@ -1,0 +1,249 @@
+
+.game-name {
+    position: absolute;
+    top: -25px;
+    z-index: 1;
+    background: #222;
+    padding: 3px 7px;
+}
+
+.attack-cards-area .total{
+    font-size: 18px;
+    text-align: center;
+}
+.attack-cards {
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.attack-cards > div {
+    margin: 4px;
+}
+.attack-cards-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.attack-cards-area > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.attack-cards-area .totals {
+    font-size: 20px;
+}
+.player-area{
+    display: flex;
+    height: 15%;
+}
+
+.board-bg {
+    position: absolute;
+    background: url(/img/field-bg.jpg);
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    opacity: 0.3;
+}
+
+.players-cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.players-cards div {
+    margin: 5px;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    height: 25%;
+    justify-content: space-between;
+}
+.global-error {
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #884242;
+    color: white;
+    font-size: 19px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.pointer{
+    cursor: pointer;
+}
+.navbar-inverse{
+    border-radius:0;
+}
+
+.resources {
+    color: white;
+    display: flex;
+    height: 50%;
+    box-sizing: border-box;
+    width: 60%;
+    background: #924242;
+    padding: 10px;
+}
+.resource.active{
+    color: #3ba14d;
+}
+
+.end-game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.2);
+    width: 100%;
+    height: 100%;
+    font-size: 120px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: white;
+    z-index:100;
+}
+.lose, .win{
+    width:50%;
+    height:50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lose{
+    background:darkred;
+}
+.win{
+    background: #2b8b4d;
+}
+
+
+.game-area {
+    width: 100%;
+    height: 100%;
+    background: #222;
+    position: relative;
+    min-width: 800px;
+    min-height: 500px;
+}
+
+.board {
+    position: relative;
+    height: 100%;
+    
+}
+.attack{
+    background: #6b1f1f;
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.cards {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.cards img {
+    width: 14%;
+    cursor: pointer;
+    z-index:100;
+}
+
+.draw-card {
+    background: rgba(0,0,0,0.8);
+    padding: 5px;
+    position: absolute;
+    color: white;
+    box-shadow: 0 0 22px black;
+    border-radius: 6px;
+    pointer-events: none;
+    display: flex;
+    z-index: 1;
+    color: green;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.draw-cards > img {
+    cursor: pointer;
+    width: 35%;
+    position: absolute;
+}
+
+
+
+.playing-field {
+    height: 60%;
+    display: flex;
+    align-items: center;
+}
+.playing-field img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.playing-field > div {
+    height: 100%;
+    width: 33.3333%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    padding: 10px;
+}
+
+
+.finish{
+    color:red;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.resource img {
+    width: 20px;
+    height: 17px;
+}
+
+.resource {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+
+span.home {
+    margin-right: 20px;
+    color: #646464;
+    cursor: pointer;
+}
+
+span.home:hover {
+    color: #eee;
+}
