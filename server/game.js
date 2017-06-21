@@ -140,17 +140,21 @@ Game.prototype = {
 
 
 		player.turnAvailable = false;
-		opponent.turnAvailable = true;
-		opponent.socket.emit('turnAvailable', player.client());
 
 		if(opponent.playedCards.length){
 			this.calculateDamage();
 			if(this.player1.hp <= 0 || this.player2.hp <= 0){
-				this.player1.socket.emit('endGame', 'win');
-				this.player2.socket.emit('endGame');
+				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
+				setTimeout(() => {
+					this.player1.socket.emit('endGame', 'win');
+					this.player2.socket.emit('endGame');
+				}, 3000);
 			}else{
 				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
+				setTimeout(() => opponent.setTurnAvailable(player), 2000);
 			}
+		}else{
+			opponent.setTurnAvailable(player);
 		}
 	},
 	// End Turn
@@ -232,8 +236,8 @@ Game.prototype = {
 
 	    player1.playedCard = {att: 0, def: 0};
 	    player2.playedCard = {att: 0, def: 0};
-	    player1.playedCards = {};
-	    player2.playedCards = {};
+	    player1.playedCards = [];
+	    player2.playedCards = [];
 	    player1.hasPlayedCards = false;
 	    player2.hasPlayedCards = false;
 

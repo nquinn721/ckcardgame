@@ -2,12 +2,17 @@
 app.factory('game', function (Player, $timeout) {
     function Game() {
         this.name;
+        this.gameMessage = 'Hey you cant do that';
     }
 
     Game.prototype = {
         init: function(playerObj, name) {
             this.name = name;
             this.createPlayer(playerObj);
+        },
+        showGameMessage: function(msg) {
+            this.gameMessage = msg;
+            $timeout(() => this.gameMessage = null, 2000);
         },
         setupController: function(controller) {
             this.controller = controller;

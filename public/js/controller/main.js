@@ -13,6 +13,7 @@ app.controller('main', function (socket, game, chat, $location, $timeout) {
     socket.on('endGame', v => this.game.end(v));
     socket.on('allMessages', msgs => chat.setAllMessages(msgs));
     socket.on('games', games => this.game.games = games);
+    socket.on('gameMessage', msg => this.game.showGameMessage(msg));
     socket.on('disband', () => {
         this.showGlobalError('Your opponent left');
         $location.path('/');

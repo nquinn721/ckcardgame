@@ -11,6 +11,7 @@ function Player(name, socket, id, ip, playerObj) {
 	this.playedCards = [];
 	this.playedCard = {att: 0, def: 0};
 	this.costOfResourceTrade = 3;
+	this.maxCardsPlayedAtATime = 4;
 
 	this.socket = socket;
 
@@ -47,7 +48,10 @@ Player.prototype = {
 
         // Check if we have the card
         if(cardCanBePlayed && card && this[card.type] && this[card.type][card.id]){
-
+        	if(this.playedCards.length >= this.maxCardsPlayedAtATime){
+        		this.socket.emit('gameMessage', 'You can only play 4 cards at a time');
+        		return;
+        	}
         	// Remove resources
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
@@ -62,7 +66,7 @@ Player.prototype = {
 
         	this.updateClient();
         }else{
-        	cb();
+    		this.socket.emit('gameMessage', 'Not enough resources');
         }
 
 	},
@@ -92,12 +96,17 @@ Player.prototype = {
 		this.socket.emit('updatePlayer', this.client());	
 	},
 	updateOpponent: function(opponent) {
-		opponent = opponent && opponent.client ? opponent.client() : opponent;
-		this.socket.emit('updateOpponent', opponent);
+		this.socket.emit('updateOpponent', this.getOpponentClient(opponent));
 	},
 	createOpponent: function(opponent) {
-		opponent = opponent && opponent.client ? opponent.client() : opponent;
-		this.socket.emit('createOpponent', opponent);
+		this.socket.emit('createOpponent', this.getOpponentClient(opponent));
+	},
+	setTurnAvailable: function(opponent) {
+		this.turnAvailable = true;
+		this.socket.emit('turnAvailable', this.getOpponentClient(opponent));	
+	},
+	getOpponentClient: function (opponent) {
+		return opponent && opponent.client ? opponent.client() : opponent;
 	},
 	logout: function() {
 		this.socket.loggedIn = false;
