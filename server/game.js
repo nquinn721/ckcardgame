@@ -124,8 +124,12 @@ Game.prototype = {
 		return Players;	
 	},
 	replay: function() {
-		this.player1.reset();
-		this.player2.reset();
+		var player1Obj = this.player1.originalObject,
+			player2Obj = this.player2.originalObject;
+		this.player1 = null;
+		this.player2 = null;
+		this.addPlayer(player1Obj);
+		this.addPlayer(player2Obj);
 		this.io.emit('replay', [this.player1.client(), this.player2.client()]);
 	},
 	clearPlayers: function() {

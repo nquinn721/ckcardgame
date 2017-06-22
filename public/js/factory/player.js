@@ -10,7 +10,7 @@ app.factory('Player', function (Card, $timeout) {
         this.brick = 0;
         this.meat = 0;
         this.water = 0;
-
+        this.leaf = 0;
         this.totalAttack = 0;
         this.totalDefense = 0;
 

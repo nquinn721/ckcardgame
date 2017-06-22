@@ -6,12 +6,15 @@ function Player(playerObj) {
 	this.meat = 0;
 	this.water = 0;
 	this.brick = 0;
+	this.leaf = 0;
 	this.creature = {};
 	this.defense  = {};
 	this.playedCards = {};
 	this.playedCard = {att: 0, def: 0};
+	this.hasPlayedCards = false;
 
 	this.socket = playerObj.socket;
+	this.originalObject = playerObj;
 }
 
 Player.prototype = {
@@ -75,16 +78,6 @@ Player.prototype = {
 	createOpponent: function(opponent) {
 		this.socket.emit('createOpponent', opponent);
 	},
-	reset: function() {
-		this.hp = 100;
-		this.meat = 0;
-		this.water = 0;
-		this.brick = 0;
-		this.creature = {};
-		this.defense  = {};
-		this.playedCards = {};
-		this.playedCard = {att: 0, def: 0};
-	},
 	client: function() {
 		return {
 			name: this.name,
@@ -95,6 +88,7 @@ Player.prototype = {
 			meat: this.meat,
 			water: this.water,
 			brick: this.brick,
+			leaf: this.leaf,
 			playedCards: this.playedCards,
 			hasPlayedCards: this.hasPlayedCards
 		}
