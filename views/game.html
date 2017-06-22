@@ -9,7 +9,7 @@
             Game: {{g.game.name}}
         </span>
     </div>
-    <div ng-if="g.isadmin">
+    <div ng-if="g.isadmin" class="admin">
         <button ng-click="g.pause()" ng-if="g.autoplay">Pause</button>
         <button ng-click="g.pause()" ng-if="!g.autoplay">Play</button>
     </div>
@@ -23,7 +23,7 @@
     <trade ng-if="g.game.showTrade"></trade>
 
     <div class="board-bg"></div>
-    <div ng-class="{attack: g.game.player.hasPlayedCards || g.game.opponent.hasPlayedCards}"></div>
+    <div ng-class="{attack: g.game.player.playedCards.length || g.game.opponent.playedCards.length}"></div>
 
     <div class="board">
         <div class="player-area">

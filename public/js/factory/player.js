@@ -21,14 +21,6 @@ app.factory('Player', function (Card, $timeout) {
     }
 
     Player.prototype = {
-        showCantPlayCard: function () {
-            var self = this;
-            this.cantPlayCard = true;
-            $timeout(function(){
-                self.cantPlayCard = false;
-            }, 2000);
-
-        },
         
         drawCard: function (card, dontshowcard) {
             var self = this;

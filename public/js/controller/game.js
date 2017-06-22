@@ -30,7 +30,6 @@ app.controller('game', function (game, socket, $location, $timeout) {
 
     };
     this.removeCardFromPlay = function(card) {
-        console.log('removing');
         socket.emit('removeCardFromPlay', card);
     }
 

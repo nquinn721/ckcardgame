@@ -72,14 +72,22 @@ Player.prototype = {
 	},
 	removeCardFromPlay: function(card, cb) {
 
+		// Put card back in inventory
 		this.drawCard(card);
 
+		// Get resources back
 		for(var i in card.resourcesNeeded)
 			this[i] += card.resourcesNeeded[i];
 
-		this.playedCards.splice(this.playedCards.indexOf(card), 1);
+		// Remove card from played
+		for(var i = 0; i < this.playedCards.length; i++){
+			if(this.playedCards[i].id === card.id){
+				this.playedCards.splice(i, 1);
+				break;
+			}
+		}
 
-
+		console.log(this.playedCards);
 		this.updateClient();
 	},
 	hasCard: function(card) {

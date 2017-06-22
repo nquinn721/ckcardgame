@@ -80,6 +80,8 @@ Game.prototype = {
 			opponent = this.getOpponent(id),
 			card;
 
+		if(!player)return;
+
 		if(!opponent){
 			this.sendToGame('globalError', 'Waiting on opponent');
 			cb();

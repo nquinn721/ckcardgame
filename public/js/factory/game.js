@@ -28,10 +28,7 @@ app.factory('game', function (Player, $timeout) {
             
         },
         finishAttack: function(players) {
-            var self = this;
-            $timeout(function(){
-                self.updatePlayers(players);
-            }.bind(this), 2000);  
+            $timeout(() => this.updatePlayers(players), 2000);
         },
         createPlayer: function (playerObj) {
             this.player = new Player(playerObj);

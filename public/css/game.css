@@ -1,7 +1,7 @@
 
 .game-name {
     position: absolute;
-    top: -25px;
+    top: -24px;
     z-index: 1;
     background: #222;
     padding: 3px 7px;
@@ -58,9 +58,7 @@
     justify-content: center;
 }
 
-.players-cards div {
-    margin: 5px;
-}
+.players-cards div {right: 0;}
 
 .footer {
     display: flex;
@@ -136,7 +134,7 @@
     background: #222;
     position: relative;
     min-width: 800px;
-    min-height: 500px;
+    min-height: 604px;
 }
 
 .board {
@@ -262,4 +260,29 @@ span.home {
 
 span.home:hover {
     color: #eee;
+}
+
+.admin.ng-scope {
+    position: absolute;
+    top: -45px;
+    z-index: 1000;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.total-damages-done.ng-binding {
+    position: absolute;
+    top: 0;
+    background: #222;
+    padding: 10px;
+    width:120%;
+}
+
+.admin.ng-scope button {
+    background: black;
+    color: white;
+    border: none;
+    width: 120px;
+    height: 45px;
+    cursor: pointer;
 }
