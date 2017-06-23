@@ -28,7 +28,10 @@ app.factory('game', function (Player, $timeout) {
             
         },
         finishAttack: function(players) {
-            $timeout(() => this.updatePlayers(players), 2000);
+            $timeout(() => {
+                this.updatePlayers(players);
+                
+            }, 2000);
         },
         createPlayer: function (playerObj) {
             this.player = new Player(playerObj);
@@ -47,14 +50,26 @@ app.factory('game', function (Player, $timeout) {
                 if(players[i].id === this.player.id)this.player.update(players[i]);
                 else this.opponent.update(players[i]);
             }
+            this.updateAttackDamage();
         },
         updatePlayer: function(player) {
             this.player.update(player);
+            this.updateAttackDamage();
+
         },
         updateOpponent: function(opponent) {
             if(!opponent)delete this.opponent;
             else if(this.opponent)
                 this.opponent.update(opponent);
+
+            this.updateAttackDamage();
+        },
+
+        updateAttackDamage: function() {
+            if(this.player && this.opponent){
+                this.damageToOpponent = this.player.totalAttack - this.opponent.totalDefense;
+                this.damageToPlayer = this.opponent.totalAttack - this.player.totalDefense;
+            }
         },
         replay: function(players) {
             this.gameEnded = false;
@@ -70,12 +85,12 @@ app.factory('game', function (Player, $timeout) {
             if(this.player.id === id)return this.player;
             else return this.opponent;
         },
-        end: function (lose) {
+        end: function (win) {
             $timeout(() =>{
-                if(lose){
-                    this.lose = true;
-                }else{
+                if(win){
                     this.win = true;
+                }else{
+                    this.lose = true;
                 }
 
                 this.gameEnded = true;

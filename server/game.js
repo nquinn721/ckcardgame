@@ -153,8 +153,8 @@ Game.prototype = {
 			if(this.player1.hp <= 0 || this.player2.hp <= 0){
 				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
 				setTimeout(() => {
-					this.player1.socket.emit('endGame', 'win');
-					this.player2.socket.emit('endGame');
+					this.player1.socket.emit('endGame', this.player2.hp <= 0 && 'win');
+					this.player2.socket.emit('endGame', this.player1.hp <= 0 && 'win');
 				}, 3000);
 			}else{
 				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);

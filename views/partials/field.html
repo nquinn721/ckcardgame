@@ -1,9 +1,10 @@
 <div class="playing-field">
     <attack player="g.game.player" g="g"></attack>
     <div class="draw-cards">
-        <div class="total-damages-done" ng-show="g.game.player.totalAttack && g.game.opponent.totalAttack">
-            You are going to do {{g.game.player.totalAttack - g.game.opponent.totalDefense}} damage!<br>
-            Your opponent is going to do {{g.game.opponent.totalAttack - g.game.player.totalDefense}} damage!
+        <div class="total-damages-done" ng-show="g.game.damageToPlayer && g.game.damageToOpponent">
+                <span ng-show="g.game.damageToOpponent > 0">You are going to do {{g.game.damageToOpponent}} damage!<br></span>
+                <span ng-show="g.game.damageToPlayer > 0">Your opponent is going to do {{g.game.damageToPlayer}} damage!</span>
+            </span>
         </div>
         
         <div class="draw-card" ng-class="{active: (g.turnAvailable && !g.drawnCard), finish: (g.turnAvailable && g.drawnCard)}" >

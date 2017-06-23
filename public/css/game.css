@@ -270,7 +270,7 @@ span.home:hover {
     margin-left: -60px;
 }
 
-.total-damages-done.ng-binding {
+.total-damages-done {
     position: absolute;
     top: 0;
     background: #222;
