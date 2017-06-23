@@ -4,7 +4,8 @@ app.directive('attack', function () {
 		templateUrl: 'partials/attack.html',
 		replace: true,
 		scope: {
-			player: '='
+			player: '=',
+			g: '='
 		}
 	}
 })

@@ -1,20 +1,25 @@
-function Player(playerObj) {
+function Player(name, socket, id, ip, playerObj) {
 	this.hp = 100;
-	this.id = playerObj.id;
-	this.ip = playerObj.ip;
-	this.name = playerObj.name;
+	this.id = id;
+	this.ip = ip;
+	this.name = name;
 	this.meat = 0;
 	this.water = 0;
 	this.brick = 0;
 	this.leaf = 0;
 	this.creature = {};
 	this.defense  = {};
-	this.playedCards = {};
+	this.playedCards = [];
 	this.playedCard = {att: 0, def: 0};
-	this.hasPlayedCards = false;
 
-	this.socket = playerObj.socket;
-	this.originalObject = playerObj;
+	this.costOfResourceTrade = 3;
+	this.maxCardsPlayedAtATime = 4;
+
+	this.socket = socket;
+
+	for(var i in playerObj)
+		this[i] = playerObj[i];
+
 }
 
 Player.prototype = {
@@ -36,31 +41,56 @@ Player.prototype = {
 		
 		var cardCanBePlayed = true;
 
+		// Check if we have available resources
         for(var i in card.resourcesNeeded){
             if(this[i] < card.resourcesNeeded[i]){
                 cardCanBePlayed = false;
             }
         }
 
+        // Check if we have the card
         if(cardCanBePlayed && card && this[card.type] && this[card.type][card.id]){
+        	if(this.playedCards.length >= this.maxCardsPlayedAtATime){
+        		this.socket.emit('gameMessage', 'You can only play 4 cards at a time');
+        		return;
+        	}
+        	// Remove resources
             for(var i in card.resourcesNeeded)
                 this[i] -= card.resourcesNeeded[i];
 
-            if(!this.playedCards[card.id])
-            	this.playedCards[card.id] = [];
-            this.playedCards[card.id].push(card);
-
-            this.hasPlayedCards = true;
+            card.isPlayed = true;
+            this.playedCards.push(card);
             
+            // Remove card
             for(var i in this[card.type])
                 if(this[card.type][i].length && this[card.type][i][0].id === card.id)this[card.type][i].pop();
 
 
         	this.updateClient();
         }else{
-        	cb();
+    		this.socket.emit('gameMessage', 'Not enough resources');
         }
 
+	},
+	removeCardFromPlay: function(card, cb) {
+
+		// Put card back in inventory
+		this.drawCard(card);
+
+		// Get resources back
+		for(var i in card.resourcesNeeded)
+			this[i] += card.resourcesNeeded[i];
+
+		// Remove card from played
+		for(var i = 0; i < this.playedCards.length; i++){
+			if(this.playedCards[i].id === card.id){
+				this.playedCards.splice(i, 1);
+				break;
+			}
+		}
+
+		console.log(this.playedCards);
+		this.updateClient();
 	},
 	hasCard: function(card) {
 		return this[card.type][card.id].length;
@@ -75,8 +105,22 @@ Player.prototype = {
 	updateClient: function() {
 		this.socket.emit('updatePlayer', this.client());	
 	},
+	updateOpponent: function(opponent) {
+		this.socket.emit('updateOpponent', this.getOpponentClient(opponent));
+	},
 	createOpponent: function(opponent) {
-		this.socket.emit('createOpponent', opponent);
+		this.socket.emit('createOpponent', this.getOpponentClient(opponent));
+	},
+	setTurnAvailable: function(opponent) {
+		this.turnAvailable = true;
+		this.socket.emit('turnAvailable', this.getOpponentClient(opponent));	
+	},
+	getOpponentClient: function (opponent) {
+		return opponent && opponent.client ? opponent.client() : opponent;
+	},
+
+	logout: function() {
+		this.socket.loggedIn = false;
 	},
 	client: function() {
 		return {
@@ -90,7 +134,7 @@ Player.prototype = {
 			brick: this.brick,
 			leaf: this.leaf,
 			playedCards: this.playedCards,
-			hasPlayedCards: this.hasPlayedCards
+			costOfResourceTrade: this.costOfResourceTrade
 		}
 	}
 }

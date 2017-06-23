@@ -3,12 +3,10 @@
     box-shadow: 0 0 8px 1px #4e4d4d;
     font-size: 1rem;
     position: relative;
-    max-height: 100%;
     padding-top: 3px;
     color: #c3c3c3;
-    height: 19vh;
-    max-width: 200px;
-    width: 8vw;
+    height: 138px;
+    width: 95px;
     z-index: 10;
     background: #111;
 }
@@ -67,5 +65,19 @@
     background: #222;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+.card .remove-from-play {
+    position: absolute;
+    top: -7px;
+    left: -7px;
+    background: #792b2b;
+    border-radius: 100%;
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
     justify-content: center;
 }

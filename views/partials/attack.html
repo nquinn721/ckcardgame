@@ -1,11 +1,11 @@
 <div class="attack-cards-area">
-	<div ng-show="player.hasPlayedCards">
+	<div ng-show="player.playedCards.length">
 	    <div class="totals">
 	        Att: {{player.totalAttack}}
 	        Def: {{player.totalDefense}}
-	    </div>
+	    </div> 
 	    <div class="attack-cards">
-		    <card ng-repeat="card in player.playedCards" card="card[0]" total="card.length"></card>
+		    <card ng-repeat="card in player.showPlayedCards" card="card[0]" total="card.length" g="g"></card>
 	    </div>
 	</div>
 </div>

@@ -1,42 +1,92 @@
 var Player = require('./player'),
 	Card = require('./card'),
-	cards = require('./lib/cards');
+	cards = require('./lib/cards'),
+	Chat = require('./chat');
 
-function Game(io) {
+function Game(io, id, pw) {
 	this.player1;
 	this.player2;
 
 	this.io = io;
+	this.id = id || Date.now();
+	this.pw = pw;
+	this.gameType = pw ? 'private' : 'public';
 
 	this.cards = cards.map(v => new Card(v));
+
+	this.chat = new Chat(io, this.id);
+
+	this.createdAt = Date.now();
 }
 
 Game.prototype = {
-	addPlayer: function(playerObj) {
+	login: function (name, socket, cb) {
+        var player = this.addPlayer(name, socket, cb);
+        socket.loggedIn = true;
+        socket.game = this.id;
+        
+    },
+	addPlayer: function(name, socket, cb) {
+		var player;
 		if(!this.player1){
-			this.player1 = new Player(playerObj);
+			this.player1 = this.createPlayer(name, socket, this.oldPlayer);
 			this.player1.turnAvailable = true;
-			return this.player1.client();
+			player = this.player1.client();
 		} else if(!this.player2){
-			this.player2 = new Player(playerObj);
-			this.player1.createOpponent(this.player2.client());
-			this.player2.createOpponent(this.player1.client());
-			return this.player2.client();
-		} else{
-			return false;
+			this.player2 = this.createPlayer(name, socket, this.oldPlayer);
+			player = this.player2.client();
+			
 		}
+
+		this.player1 && this.player1.createOpponent(this.player2);
+		this.player2 && this.player2.createOpponent(this.player1);
+
+		this.oldPlayer = null;
+
+
+		if(this.isFull()){
+            this.getOpponent(socket.id).socket.emit('turnAvailable');
+        }
+        this.chat.init(socket);
+        cb(player, this.id);
+
+
+	},
+	createPlayer: function(name, socket, oldPlayer) {
+		return new Player(name, socket, socket.id, socket.handshake.address, oldPlayer);
 	},
 	removePlayer: function(id) {
-		if(this.player1 && this.player1.id === id)
-			this.player1 = null;
-		if(this.player2 && this.player2.id === id)
-			this.player2 = null;
+		var opponent = this.getOpponent(id),
+			player = this.player1 && this.player1.id === id ? 'player1' : 'player2';
+
+		if(!this[player])return;
+
+		
+		this[player].socket.leave(this.id);
+		this.oldPlayer = this[player].client();
+		
+		this[player] = null;
+
+		delete this.oldPlayer.id;
+		delete this.oldPlayer.name;
+		delete this.oldPlayer.ip;
+		if(opponent)
+			opponent.updateOpponent(null);
 	},
 
 	// Turn
 	drawCard: function(id, cb) {
 		var player = this.getPlayer(id),
+			opponent = this.getOpponent(id),
 			card;
+
+		if(!player)return;
+
+		if(!opponent){
+			this.sendToGame('globalError', 'Waiting on opponent');
+			cb();
+			return;
+		}
 
 		if(player.turnAvailable){
 			card = this.cards[Math.floor(Math.random() * this.cards.length)];
@@ -47,8 +97,13 @@ Game.prototype = {
 	},
 	playCard: function(id, card, cb) {
 		var player = this.getPlayer(id);
-		if(player.turnAvailable)
+		if(player && player.turnAvailable)
 			player.playCard(card, cb);
+	},
+	removeCardFromPlay: function(id, card, cb) {
+		var player = this.getPlayer(id);
+		if(player && player.turnAvailable)
+			player.removeCardFromPlay(card, cb);
 	},
 	barterResources: function(id) {
 		var player = this.getPlayer(id);
@@ -60,8 +115,8 @@ Game.prototype = {
 
 		if(!player)return;
 
-		if(player[resource] >= 4){
-			player[resource] -= 4;
+		if(player[resource] >= player.costOfResourceTrade){
+			player[resource] -= player.costOfResourceTrade;
 			player[getResource]++
 			player.updateClient();
 		}else{
@@ -76,7 +131,7 @@ Game.prototype = {
 
 		if(player.hasCard(card)){
 			for(var i in card.resourcesNeeded)
-				player[i]++;
+				player[i] += card.resourcesNeeded[i];
 			player.removeCard(card);
 			player.updateClient();
 		}else{
@@ -87,25 +142,35 @@ Game.prototype = {
 		var player = this.getPlayer(id),
 			opponent = this.getOpponent(id);
 
-		
-		player.turnAvailable = false;
-		opponent.turnAvailable = true;
-		opponent.socket.emit('turnAvailable', player.client());
+		if(!player || !opponent)return;
 
-		if(opponent.hasPlayedCards){
+
+		player.turnAvailable = false;
+		opponent.updateOpponent(player);
+
+		if(opponent.playedCards.length){
 			this.calculateDamage();
 			if(this.player1.hp <= 0 || this.player2.hp <= 0){
-				this.player1.socket.emit('endGame', 'win');
-				this.player2.socket.emit('endGame');
+				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
+				setTimeout(() => {
+					this.player1.socket.emit('endGame', 'win');
+					this.player2.socket.emit('endGame');
+				}, 3000);
 			}else{
-				this.io.emit('finishAttack', [this.player1.client(), this.player2.client()]);
+				this.sendToGame('finishAttack', [this.player1.client(), this.player2.client()]);
+				setTimeout(() => opponent.setTurnAvailable(player), 2000);
 			}
+		}else{
+			opponent.setTurnAvailable(player);
 		}
 	},
 	// End Turn
 
 	isFull: function () {
 		return this.player1 && this.player2;	
+	},
+	isEmpty: function() {
+		return !this.player1 && !this.player2;	
 	},
 	updatePlayers: function() {
 		if(this.player1)this.player1.updateClient();
@@ -124,17 +189,28 @@ Game.prototype = {
 		return Players;	
 	},
 	replay: function() {
-		var player1Obj = this.player1.originalObject,
-			player2Obj = this.player2.originalObject;
+		var player1 = this.player1.originalObj,
+			player2 = this.player2.originalObj;
 		this.player1 = null;
 		this.player2 = null;
-		this.addPlayer(player1Obj);
-		this.addPlayer(player2Obj);
-		this.io.emit('replay', [this.player1.client(), this.player2.client()]);
+
+		this.addPlayer(player1);
+		this.addPlayer(player2);
+		this.sendToGame('replay', [this.player1.client(), this.player2.client()]);
+	},
+	sendRemoveToUsers: function() {
+		if(this.player1)
+			this.player1.logout();
+		if(this.player2)
+			this.player2.logout();
+		this.sendToGame('disband');	
 	},
 	clearPlayers: function() {
 		this.player1 = null;
 		this.player2 = null;
+	},
+	sendToGame: function (event, data) {
+		this.io.to(this.id).emit(event, data);
 	},
 	calculateDamage: function () {
 		var player1 = this.player1,
@@ -142,13 +218,13 @@ Game.prototype = {
 	        dam1, dam2;
 
 
-	    for(var i in player1.playedCards){
-	        player1.playedCard.att += player1.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
-	        player1.playedCard.def += player1.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
+	    for(var i = 0; i < player1.playedCards.length; i++){
+	        player1.playedCard.att += player1.playedCards[i].att || 0;
+	        player1.playedCard.def += player1.playedCards[i].def || 0;
 	    }
 	    for(var i in player2.playedCards){
-	        player2.playedCard.att += player2.playedCards[i].map((v) => (v.att || 0)).reduce((a,b) => (a + b));
-	        player2.playedCard.def += player2.playedCards[i].map((v) => (v.def || 0)).reduce((a,b) => (a + b));
+	        player2.playedCard.att += player2.playedCards[i].att || 0;
+	        player2.playedCard.def += player2.playedCards[i].def || 0;
 	    }
 
 	    if(player1.playedCard && player2.playedCard){
@@ -167,13 +243,12 @@ Game.prototype = {
 
 	    player1.playedCard = {att: 0, def: 0};
 	    player2.playedCard = {att: 0, def: 0};
-	    player1.playedCards = {};
-	    player2.playedCards = {};
+	    player1.playedCards = [];
+	    player2.playedCards = [];
 	    player1.hasPlayedCards = false;
 	    player2.hasPlayedCards = false;
 
 	}
 }
-
 
 module.exports = Game;

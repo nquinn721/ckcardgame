@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title>Card Game</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/card.css">
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/trade.css">
     <link rel="stylesheet" href="css/player.css">
 </head>
 <body ng-controller="main as main">
-
+<div class="global-error" ng-show="main.globalError">{{main.globalError}}</div>
 <ng-view></ng-view>
 
 

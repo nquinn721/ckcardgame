@@ -1,13 +1,17 @@
 
 app.factory('game', function (Player, $timeout) {
     function Game() {
-        this.cards;
+        this.name;
     }
 
     Game.prototype = {
-        init: function(playerObj, cards) {
-            this.cards = cards;
+        init: function(playerObj, name) {
+            this.name = name;
             this.createPlayer(playerObj);
+        },
+        showGameMessage: function(msg) {
+            this.gameMessage = msg;
+            $timeout(() => this.gameMessage = null, 2000);
         },
         setupController: function(controller) {
             this.controller = controller;
@@ -24,21 +28,21 @@ app.factory('game', function (Player, $timeout) {
             
         },
         finishAttack: function(players) {
-            var self = this;
-            $timeout(function(){
-                self.updatePlayers(players);
-            }.bind(this), 2000);  
+            $timeout(() => this.updatePlayers(players), 2000);
         },
         createPlayer: function (playerObj) {
             this.player = new Player(playerObj);
             this.player.type = 'player';
         },
         createOpponent: function(opponent) {
+            if(!opponent){
+                this.opponent = null;
+                return;
+            }
             this.opponent = new Player(opponent);
             this.opponent.type = 'opponent';
         },
         updatePlayers: function(players) {
-            console.log(players);
             for(var i = 0; i < players.length; i++){
                 if(players[i].id === this.player.id)this.player.update(players[i]);
                 else this.opponent.update(players[i]);
@@ -48,7 +52,8 @@ app.factory('game', function (Player, $timeout) {
             this.player.update(player);
         },
         updateOpponent: function(opponent) {
-            if(this.opponent)
+            if(!opponent)delete this.opponent;
+            else if(this.opponent)
                 this.opponent.update(opponent);
         },
         replay: function(players) {
@@ -66,13 +71,16 @@ app.factory('game', function (Player, $timeout) {
             else return this.opponent;
         },
         end: function (lose) {
-            if(lose){
-                this.lose = true;
-            }else{
-                this.win = true;
-            }
+            $timeout(() =>{
+                if(lose){
+                    this.lose = true;
+                }else{
+                    this.win = true;
+                }
 
-            this.gameEnded = true;
+                this.gameEnded = true;
+                
+            }, 3000);
 
         }
     };

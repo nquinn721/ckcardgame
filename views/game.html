@@ -1,5 +1,15 @@
 <div class="game-area">
-    <div ng-if="g.isadmin">
+    
+
+    <div class="game-name">
+        <span class="home" ng-click="main.logout()">
+            < Home
+        </span>
+        <span  ng-show="g.game.name">
+            Game: {{g.game.name}}
+        </span>
+    </div>
+    <div ng-if="g.isadmin" class="admin">
         <button ng-click="g.pause()" ng-if="g.autoplay">Pause</button>
         <button ng-click="g.pause()" ng-if="!g.autoplay">Play</button>
     </div>
@@ -13,12 +23,15 @@
     <trade ng-if="g.game.showTrade"></trade>
 
     <div class="board-bg"></div>
-    <div ng-class="{attack: g.game.player.hasPlayedCards || g.game.opponent.hasPlayedCards}"></div>
+    <div ng-class="{attack: g.game.player.playedCards.length || g.game.opponent.playedCards.length}"></div>
 
     <div class="board">
         <div class="player-area">
             <player g="g" player="g.game.player"></player>
             <resources></resources>
+            <div class="game-message" ng-show="g.game.gameMessage">
+                <div class="message">{{g.game.gameMessage}}</div>
+            </div>
             <player g="g" player="g.game.opponent"></player>
         </div>
         <field></field>
@@ -33,6 +46,7 @@
         </div>
         
 
-
+        
     </div>
+
 </div>
