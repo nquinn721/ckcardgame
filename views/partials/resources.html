@@ -11,5 +11,9 @@
         <img src="img/water.png" alt="">
         {{g.game.player.water}}
     </div>
+    <div class="resource" ng-class="{active: g.game.player.newleaf}">
+        <img src="img/leaf.png" alt="">
+        {{g.game.player.leaf}}
+    </div>
     <div ng-show="g.game.player.cantPlayCard">Not enough resources!</div>
 </div>

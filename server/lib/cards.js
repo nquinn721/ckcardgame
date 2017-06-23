@@ -22,10 +22,24 @@ var resourceTypes = [
     },
     {
         type: 'resource',
+        name: 'Leaf',
+        id: 'leaf',
+        amount: 4,
+        total: 1
+    },
+    {
+        type: 'resource',
         name: 'Water x2', 
         id: 'water',
         amount: 2,
         total: 2
+    },
+    {
+        type: 'resource',
+        name: 'Water x5', 
+        id: 'water',
+        amount: 5,
+        total: 5
     },
     {
         type: 'resource',
@@ -36,10 +50,38 @@ var resourceTypes = [
     },
     {
         type: 'resource',
+        name: 'Meat x5', 
+        id: 'meat',
+        amount: 5,
+        total: 5
+    },
+    {
+        type: 'resource',
         name: 'Brick x2',
         id: 'brick',
         amount: 2,
         total: 2
+    },
+    {
+        type: 'resource',
+        name: 'Brick x5',
+        id: 'brick',
+        amount: 5,
+        total: 5
+    },
+    {
+        type: 'resource',
+        name: 'Leaf x2',
+        id: 'leaf',
+        amount: 2,
+        total: 2
+    },
+    {
+        type: 'resource',
+        name: 'Leaf x5',
+        id: 'leaf',
+        amount: 5,
+        total: 5
     }
 ]
 var cards = [

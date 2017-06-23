@@ -6,10 +6,12 @@ function Player(name, socket, id, ip, playerObj) {
 	this.meat = 0;
 	this.water = 0;
 	this.brick = 0;
+	this.leaf = 0;
 	this.creature = {};
 	this.defense  = {};
 	this.playedCards = [];
 	this.playedCard = {att: 0, def: 0};
+
 	this.costOfResourceTrade = 3;
 	this.maxCardsPlayedAtATime = 4;
 
@@ -116,6 +118,7 @@ Player.prototype = {
 	getOpponentClient: function (opponent) {
 		return opponent && opponent.client ? opponent.client() : opponent;
 	},
+
 	logout: function() {
 		this.socket.loggedIn = false;
 	},
@@ -129,6 +132,7 @@ Player.prototype = {
 			meat: this.meat,
 			water: this.water,
 			brick: this.brick,
+			leaf: this.leaf,
 			playedCards: this.playedCards,
 			costOfResourceTrade: this.costOfResourceTrade
 		}
