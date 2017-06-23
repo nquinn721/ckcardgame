@@ -4,13 +4,7 @@ app.controller('game', function (game, socket, $location, $timeout) {
     this.autoplay = false;
     this.game = game;
 
-    this.game.setupController(this);
-
-    if(this.game.player && this.game.player.name.match(/admin/i)){
-        this.isadmin = true;
-    }
-
-
+    
     this.playCard = function (card) {
         if(this.turnAvailable){
             this.attackComing = true;

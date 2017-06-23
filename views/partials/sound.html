@@ -1,0 +1,14 @@
+<div class="sound">
+    <div class="play-pause">
+        <i class="fa fa-play pointer" ng-show="!main.sound.isPlaying" ng-click="main.sound.playMusic()"></i>
+        <i class="fa fa-pause pointer" ng-show="main.sound.isPlaying" ng-click="main.sound.pauseMusic()"></i>
+    </div>
+    <div class="volume">
+        <i class="fa fa-volume-up" ng-show="main.sound.volume > 5"></i>
+        <i class="fa fa-volume-down" ng-show="main.sound.volume <= 5 && main.sound.volume > 0"></i>
+        <i class="fa fa-volume-off" ng-show="main.sound.volume === 0"></i>
+    </div>
+    <div class="volume-slider">
+        <input type="range" value="4" max="10" min="0" ng-model="main.sound.volume" ng-change="main.sound.adjustVolume()">
+    </div>
+</div>

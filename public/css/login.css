@@ -60,4 +60,8 @@ form.login-box {
     background-color: #333 !important;
     border-color: black !important;
 }
+.login-box .sound{
+    width: 50%;
+    margin-bottom: 10px;
+}
 

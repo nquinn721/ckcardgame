@@ -5,6 +5,10 @@
     z-index: 1;
     background: #222;
     padding: 3px 7px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .attack-cards-area .total{
@@ -285,4 +289,17 @@ span.home:hover {
     width: 120px;
     height: 45px;
     cursor: pointer;
+}
+
+.sound{
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+}
+.game-name .sound {
+    width: 12%;
+}
+
+.sound input {
+    width: 50px;
 }

@@ -1,7 +1,10 @@
-app.controller('main', function (socket, game, chat, $location, $timeout) {
+app.controller('main', function (socket, game, chat, $location, $timeout, sound) {
     var self = this;
     this.game = game;
     this.title = 'Welcome to the card game!';
+    this.sound = sound;
+
+    console.log(this.sound);
 
 	socket.on('updatePlayers', v => this.game.updatePlayers(v));
     socket.on('updatePlayer', v => this.game.updatePlayer(v));
@@ -18,12 +21,8 @@ app.controller('main', function (socket, game, chat, $location, $timeout) {
         this.showGlobalError('Your opponent left');
         $location.path('/');
     });
-    socket.on('globalError', (msg) => {
-        this.showGlobalError(msg)
-    });
-    socket.on('redirect', () => {
-        console.log('redirect');
-        $location.path('/')});
+    socket.on('globalError', (msg) => this.showGlobalError(msg));
+    socket.on('redirect', () => $location.path('/'));
 
     this.showGlobalError = function(msg) {
         this.globalError = msg;
@@ -34,6 +33,15 @@ app.controller('main', function (socket, game, chat, $location, $timeout) {
         socket.emit('logout');
         $location.path('/');
     }
+
+
+    this.game.setupController(this);
+
+    if(this.game.player && this.game.player.name.match(/admin/i)){
+        this.isadmin = true;
+    }
+
+
 
 });
 

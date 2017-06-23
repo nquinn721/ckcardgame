@@ -3,12 +3,12 @@
     <div class="resources-needed" ng-if="card.resourcesNeeded">
         <div ng-repeat="(resource, cost) in card.resourcesNeeded">
             <span>{{cost}}</span>
-            <img ng-src="img/{{resource}}.png" alt="">
+            <img ng-src="img/resource/{{resource}}.png" alt="">
         </div>
     </div>
     <div class="total" ng-if="total">{{total}}</div>
     <div class="image">
-        <img ng-src="img/{{card.name.toLowerCase()}}.png" alt="">
+        <img ng-src="img/{{card.type}}/{{card.name.toLowerCase()}}.png" alt="">
     </div>
     <div class="name">{{card.name}}</div>
     <div class="stats" ng-if="!trade">
