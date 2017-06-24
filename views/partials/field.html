@@ -6,10 +6,10 @@
                 <span ng-show="g.game.damageToPlayer > 0">Your opponent is going to do {{g.game.damageToPlayer}} damage!</span>
             </span>
         </div>
-        
-        <div class="draw-card" ng-class="{active: (g.turnAvailable && !g.drawnCard), finish: (g.turnAvailable && g.drawnCard)}" >
-            <span ng-show="g.turnAvailable && !g.drawnCard">Draw a card!</span>
-            <span ng-show="g.turnAvailable && g.drawnCard">Finish Turn!</span>
+
+        <div class="draw-card" ng-class="{active: (g.game.turnAvailable && !g.drawnCard), finish: (g.game.turnAvailable && g.drawnCard)}" >
+            <span ng-show="g.game.turnAvailable && !g.drawnCard">Draw a card!</span>
+            <span ng-show="g.game.turnAvailable && g.drawnCard">Finish Turn!</span>
         </div>
         <img src="img/draw-card.jpg" alt="" ng-click="g.drawCard()" >
         <div class="show-drawn-card">

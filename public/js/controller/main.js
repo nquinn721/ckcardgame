@@ -10,7 +10,7 @@ app.controller('main', function (socket, game, chat, $location, $timeout, sound)
     socket.on('createOpponent', v => this.game.createOpponent(v));
     socket.on('updateOpponent', v => this.game.updateOpponent(v));
     socket.on('finishAttack', v => this.game.finishAttack(v));
-    socket.on('turnAvailable', v => this.game.turnAvailable(v));
+    socket.on('turnAvailable', v => this.game.setTurnAvailable(v));
     socket.on('replay', v => this.game.replay(v))
     socket.on('endGame', v => this.game.end(v));
     socket.on('allMessages', msgs => chat.setAllMessages(msgs));

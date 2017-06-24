@@ -4,7 +4,7 @@ app.controller('game', function (game, socket, $location, $timeout, sound) {
     this.autoplay = false;
     this.game = game;
 
-    sound.changeSound('game');
+
     this.playCard = function (card) {
         if(this.turnAvailable){
             this.attackComing = true;
@@ -13,11 +13,11 @@ app.controller('game', function (game, socket, $location, $timeout, sound) {
     };
 
     this.drawCard = function () {
-        if(this.turnAvailable && !this.drawnCard){
+        if(this.game.turnAvailable && !this.drawnCard){
             socket.emit('drawCard', (card) => this.game.player.drawCard(card, this.isadmin));
             this.drawnCard = true;
         }else{
-            this.turnAvailable = false;
+            this.game.turnAvailable = false;
             this.drawnCard = false;
             socket.emit('endTurn');
         }

@@ -102,6 +102,9 @@ Player.prototype = {
 	getList: function (type) {
 		return Object.keys(this[type]).map(v => ({name: v, total: this[type][v].length}));
 	},
+	emit: function(event, data) {
+		this.socket.emit(event, data);
+	},
 	updateClient: function() {
 		this.socket.emit('updatePlayer', this.client());	
 	},

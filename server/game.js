@@ -43,9 +43,8 @@ Game.prototype = {
 
 		this.oldPlayer = null;
 
-
 		if(this.isFull()){
-            this.getOpponent(socket.id).socket.emit('turnAvailable');
+            this.getOpponent(socket.id).emit('turnAvailable');
         }
         this.chat.init(socket);
         cb(player, this.id);
@@ -167,7 +166,7 @@ Game.prototype = {
 	// End Turn
 
 	isFull: function () {
-		return this.player1 && this.player2;	
+		return (this.player1 && this.player2);
 	},
 	isEmpty: function() {
 		return !this.player1 && !this.player2;	

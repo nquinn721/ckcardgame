@@ -49,7 +49,7 @@ app.factory('sound', function() {
 				volume = 0;
 			}
 
-			this.sound.volume = volume / 10;
+			this.setVolume();
 			this.savedVolume = this.volume; 
 	    	this.volume = volume;
 	    	localStorage.setItem('volume', volume);	
@@ -60,9 +60,14 @@ app.factory('sound', function() {
 
 	        setTimeout(() => {
 		        this.sound.src = this.currentSound;
-		        this.sound.play();
+		        if(this.isPlaying)
+		        	this.sound.play();
+		        this.setVolume();
 	        }, 1000);
-	    }	
+	    },
+	    setVolume: function(volume) {
+	    	this.sound.volume = volume / 10 || this.volume / 10;
+	    }
 	}
 
 	return new Sound;

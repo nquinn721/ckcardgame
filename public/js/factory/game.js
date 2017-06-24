@@ -13,18 +13,18 @@ app.factory('game', function (Player, $timeout) {
             this.gameMessage = msg;
             $timeout(() => this.gameMessage = null, 2000);
         },
-        setupController: function(controller) {
-            this.controller = controller;
+        setupController: function(mainController) {
+            this.mainController = mainController;
         },
-        turnAvailable: function (opponent) {
+        setTurnAvailable: function (opponent) {
             if(opponent)
                 this.updateOpponent(opponent);
-            this.controller.turnAvailable = true;
+            this.turnAvailable = true;
 
-            if(this.controller.autoplay){
-                this.controller.drawCard();
-                this.controller.drawCard();
-            }
+            // if(this.controller.autoplay){
+            //     this.controller.drawCard();
+            //     this.controller.drawCard();
+            // }
             
         },
         finishAttack: function(players) {
