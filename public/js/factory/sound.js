@@ -1,10 +1,13 @@
 app.factory('sound', function() {
 	function Sound() {
-		this.sounds = ['sound/bg-music.wav', 'sound/game-bg.music.wav'];
+		this.sounds = {
+			login: 'sound/bg-music.wav', 
+			game: 'sound/game-bg.wav'
+		};
         this.volume = Number(localStorage.volume) || 10;
-        this.sound = new Audio(this.sounds[0]);
+        this.currentSound = this.sounds.login;
+        this.sound = new Audio(this.currentSound);
         this.isPlaying = true;
-        this.currentSound = this.sounds[0];
 
 
 	    this.sound.loop = true;
@@ -36,13 +39,29 @@ app.factory('sound', function() {
 	    },
 	    adjustVolume: function() {
 	        this.sound.volume = this.volume / 10;
-	        localStorage.setItem('volume', this.sound.volume);
+	        localStorage.setItem('volume', this.volume);
+	    },
+	    mute: function() {
+	    	var volume = this.volume;
+			if(volume === 0){
+				volume = this.savedVolume;
+			}else{
+				volume = 0;
+			}
+
+			this.sound.volume = volume / 10;
+			this.savedVolume = this.volume; 
+	    	this.volume = volume;
+	    	localStorage.setItem('volume', volume);	
 	    },
 
-	    changeSound: function() {
-	        var sounds = this.sounds.slice();
-	        sounds.splice(this.sounds.indexOf(this.currentSound), 1);
-	        this.currentSound = sounds[0];
+	    changeSound: function(view) {
+	        this.currentSound = this.sounds[view];
+
+	        setTimeout(() => {
+		        this.sound.src = this.currentSound;
+		        this.sound.play();
+	        }, 1000);
 	    }	
 	}
 

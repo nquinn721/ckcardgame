@@ -1,4 +1,4 @@
-app.controller('login', function (socket, $location, game, $timeout) {
+app.controller('login', function (socket, $location, game, $timeout, sound) {
     var self = this;
 
     // autologin
@@ -10,6 +10,8 @@ app.controller('login', function (socket, $location, game, $timeout) {
     this.joinGameChosen;
     this.pw;
     this.name;
+
+    sound.changeSound('login');
 
     this.login = function () {
         if(this.joinGame){

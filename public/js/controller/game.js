@@ -1,10 +1,10 @@
-app.controller('game', function (game, socket, $location, $timeout) {
+app.controller('game', function (game, socket, $location, $timeout, sound) {
     var self = this;
     this.isadmin = false;
     this.autoplay = false;
     this.game = game;
 
-    
+    sound.changeSound('game');
     this.playCard = function (card) {
         if(this.turnAvailable){
             this.attackComing = true;

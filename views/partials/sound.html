@@ -3,7 +3,7 @@
         <i class="fa fa-play pointer" ng-show="!main.sound.isPlaying" ng-click="main.sound.playMusic()"></i>
         <i class="fa fa-pause pointer" ng-show="main.sound.isPlaying" ng-click="main.sound.pauseMusic()"></i>
     </div>
-    <div class="volume">
+    <div class="volume pointer" ng-click="main.sound.mute()">
         <i class="fa fa-volume-up" ng-show="main.sound.volume > 5"></i>
         <i class="fa fa-volume-down" ng-show="main.sound.volume <= 5 && main.sound.volume > 0"></i>
         <i class="fa fa-volume-off" ng-show="main.sound.volume === 0"></i>
